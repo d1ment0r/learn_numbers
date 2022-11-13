@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'state.dart';
 part 'event.dart';
@@ -33,7 +31,7 @@ class AppBlocBloc extends Bloc<AppBlocEvent, AppState> {
       try {
         counter++;
         buttomPressed = true;
-        print('Answer - ${event.answer} truePosition $truePosition');
+        // print('Answer - ${event.answer} truePosition $truePosition');
         if (event.answer) {
           good++;
         } else {
