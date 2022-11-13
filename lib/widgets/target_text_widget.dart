@@ -11,6 +11,7 @@ class TargetTextWinget extends StatelessWidget {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
+        if (state.buttonHelpPressed) {}
         return Container(
           margin: const EdgeInsets.all(0),
           child: Text(
@@ -18,10 +19,10 @@ class TargetTextWinget extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: state.page == 1
-                    ? 170.0
+                    ? 160.0
                     : state.page == 2
-                        ? 165.0
-                        : 160.0),
+                        ? 155.0
+                        : 150.0),
           ),
         );
       },
