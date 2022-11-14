@@ -15,6 +15,7 @@ class OneScreen extends StatelessWidget {
       create: (context) => AppBlocBloc(page: 1),
       child: Center(
         child: Expanded(
+          flex: 1,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: const <Widget>[

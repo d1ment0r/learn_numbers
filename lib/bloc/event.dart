@@ -5,11 +5,15 @@ abstract class AppEvent {
 }
 
 class PressButtonChoiseEvent extends AppEvent {
-  final bool answer;
-  PressButtonChoiseEvent(this.answer);
+  final int choise;
+  PressButtonChoiseEvent(this.choise);
 }
 
 class PressButtonHelpEvent extends AppEvent {
   final int currentTarget;
   PressButtonHelpEvent(this.currentTarget);
+}
+
+class UpdateScreenEvent extends AppEvent {
+  UpdateScreenEvent();
 }

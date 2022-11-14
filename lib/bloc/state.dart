@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:math';
 
 import 'package:number_to_words/number_to_words.dart';
@@ -6,6 +7,7 @@ class AppState {
   int counter = 0;
   bool buttomPressed = false;
   bool buttonHelpPressed = false;
+  int buttonChoise = 0;
   int wrong = 0;
   int good = 0;
   late int page;
@@ -21,9 +23,12 @@ class AppState {
     required this.target,
     required this.buttomPressed,
     required this.buttonHelpPressed,
+    required this.buttonChoise,
     required this.truePosition,
     required this.textButton,
-  });
+  }) {
+    developer.log('State - AppState');
+  }
 
   AppState.update({
     required this.page,
@@ -35,6 +40,7 @@ class AppState {
     required this.buttonHelpPressed,
     required this.truePosition,
   }) {
+    // pause();
     int target = this.target;
     List<String> textButton = ['', '', ''];
     // print('target $target this.target ${this.target}');
@@ -67,10 +73,10 @@ class AppState {
     ];
     // print('$textButton target $target');
     this.textButton = textButton;
-    // print('State.dart(74) target - $target');
     this.target = target;
     buttonHelpPressed = false;
     // this.truePosition = truePosition;
+    developer.log('State - AppState.update target($target)');
   }
 }
 

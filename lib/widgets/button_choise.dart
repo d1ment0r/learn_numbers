@@ -19,7 +19,8 @@ class ButtonChoiseWidget extends StatefulWidget {
 class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
   final translator = GoogleTranslator();
   final TextEditingController tocontroller = TextEditingController();
-  bool isTrueButton = false;
+  bool isRedButton = false;
+  bool isGreenButton = false;
 
   _translateLang(input) {
     translator.translate(input, to: 'tr').then((resault) {
@@ -32,35 +33,42 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (!state.buttonHelpPressed) {
+        if (!state.buttonHelpPressed && !state.buttomPressed) {
           _translateLang(state.textButton[widget.number]);
-          isTrueButton = false;
-        } else {
-          isTrueButton = state.truePosition == widget.number;
         }
-        print('button choise');
+        isRedButton = state.buttonChoise == widget.number &&
+            state.buttonChoise != state.truePosition &&
+            state.buttomPressed;
+        isGreenButton =
+            state.buttonHelpPressed && state.truePosition == widget.number;
+        state.buttomPressed && widget.number != state.truePosition;
         return Center(
           child: GestureDetector(
             onTap: () {
-              context.read<AppBlocBloc>().add(
-                  PressButtonChoiseEvent(state.truePosition == widget.number));
+              context
+                  .read<AppBlocBloc>()
+                  .add(PressButtonChoiseEvent(widget.number));
             },
             child: Container(
               margin: const EdgeInsets.only(top: 20, left: 40.0, right: 40.0),
               height: 48,
               decoration: BoxDecoration(
-                color: isTrueButton ? Colors.green : Colors.grey[200],
-                borderRadius: BorderRadius.circular(15),
+                color: isGreenButton
+                    ? Colors.green
+                    : isRedButton
+                        ? Colors.red
+                        : Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade500,
-                    spreadRadius: 1,
+                    spreadRadius: -1,
                     blurRadius: 8,
                     offset: const Offset(4, 4),
                   ),
                   const BoxShadow(
                     color: Colors.white,
-                    spreadRadius: 2,
+                    spreadRadius: -2,
                     blurRadius: 8,
                     offset: Offset(-4, -4),
                   ),
@@ -75,6 +83,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   style: TextStyle(
+                      // backgroundColor: Colors.grey.shade100,
                       fontSize: state.page == 1
                           ? 32.0
                           : state.page == 2
