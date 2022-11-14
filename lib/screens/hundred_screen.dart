@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/widgets/bottom_buttons_widget.dart';
 import 'package:learn_numbers/widgets/button_choise.dart';
-import 'package:learn_numbers/widgets/header_counter.dart';
+import 'package:learn_numbers/widgets/header_counter_widget.dart';
 import 'package:learn_numbers/widgets/target_text_widget.dart';
 
 class HundredScreen extends StatelessWidget {

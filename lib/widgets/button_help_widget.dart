@@ -30,7 +30,7 @@ class ButtonHelpWidget extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(25),
                   image: const DecorationImage(
-                    image: Svg('assets/image/help_ok.svg',
+                    image: Svg('assets/images/help_ok.svg',
                         size: Size(25.0, 25.0), color: Colors.teal),
                   ),
                   boxShadow: [

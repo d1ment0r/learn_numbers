@@ -94,18 +94,5 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         truePosition: state.truePosition,
       ));
     });
-    updateData() {
-      emit(AppState.update(
-        counter: state.counter,
-        buttomPressed: false,
-        buttonHelpPressed: false,
-        wrong: state.wrong,
-        good: state.good,
-        target: state.target,
-        page: state.page,
-        truePosition: state.truePosition,
-      ));
-      developer.log('Test function');
-    }
   }
 }
