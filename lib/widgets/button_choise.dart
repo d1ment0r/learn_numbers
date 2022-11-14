@@ -77,20 +77,21 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
 
               /// TEXT
               child: Center(
-                child: TextField(
-                  controller: tocontroller,
-                  enabled: false,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  style: TextStyle(
-                      // backgroundColor: Colors.grey.shade100,
-                      fontSize: state.page == 1
-                          ? 32.0
-                          : state.page == 2
-                              ? 25.0
-                              : 20.0,
-                      fontWeight: FontWeight.w400),
-                ),
+                child: const Text('test string'),
+                // child: TextField(
+                //   controller: tocontroller,
+                //   enabled: false,
+                //   textAlign: TextAlign.center,
+                //   maxLines: 1,
+                //   style: TextStyle(
+                //       // backgroundColor: Colors.grey.shade100,
+                //       fontSize: state.page == 1
+                //           ? 32.0
+                //           : state.page == 2
+                //               ? 25.0
+                //               : 20.0,
+                //       fontWeight: FontWeight.w400),
+                // ),
               ),
             ),
           ),

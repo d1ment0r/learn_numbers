@@ -29,10 +29,10 @@ class ButtonPlayWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(25),
-                  // image: const DecorationImage(
-                  //   image: Svg('assets/image/sound.svg',
-                  //       size: Size(30.0, 30.0), color: Colors.teal),
-                  // ),
+                  image: const DecorationImage(
+                    image: Svg('assets/image/sound_ok.svg',
+                        size: Size(30.0, 30.0), color: Colors.teal),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.shade500,

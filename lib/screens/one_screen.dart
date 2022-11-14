@@ -12,19 +12,20 @@ class OneScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => AppBlocBloc(page: 1),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const <Widget>[
-              HeaderCounterWidget(),
-              TargetTextWinget(),
-              ButtonChoiseWidget(number: 0),
-              ButtonChoiseWidget(number: 1),
-              ButtonChoiseWidget(number: 2),
-              BottomButtonWidget(),
-            ],
-          ),
-        ));
+      create: (context) => AppBlocBloc(page: 1),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const <Widget>[
+            HeaderCounterWidget(),
+            TargetTextWinget(),
+            ButtonChoiseWidget(number: 0),
+            ButtonChoiseWidget(number: 1),
+            ButtonChoiseWidget(number: 2),
+            BottomButtonWidget(),
+          ],
+        ),
+      ),
+    );
   }
 }

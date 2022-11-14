@@ -24,15 +24,15 @@ class ButtonHelpWidget extends StatelessWidget {
                     .add(PressButtonHelpEvent(state.target));
               },
               child: Container(
-                height: 50,
-                width: 50,
+                height: 50.0,
+                width: 50.0,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(25),
-                  // image: const DecorationImage(
-                  //   image: Svg('assets/image/help.svg',
-                  //       size: Size(25.0, 25.0), color: Colors.teal),
-                  // ),
+                  image: const DecorationImage(
+                    image: Svg('assets/image/help_ok.svg',
+                        size: Size(25.0, 25.0), color: Colors.teal),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.shade500,
