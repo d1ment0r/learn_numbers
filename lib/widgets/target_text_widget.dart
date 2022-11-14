@@ -12,7 +12,7 @@ class TargetTextWinget extends StatelessWidget {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (state.buttomPressed) {
+        if (state.buttomPressed && state.buttonChoise == state.truePosition) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             developer.log('Function - updateScreenData');
             context.read<AppBlocBloc>().add(UpdateScreenEvent());

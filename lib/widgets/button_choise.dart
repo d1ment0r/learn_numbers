@@ -53,11 +53,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
               margin: const EdgeInsets.only(top: 20, left: 40.0, right: 40.0),
               height: 48,
               decoration: BoxDecoration(
-                color: isGreenButton
-                    ? Colors.green
-                    : isRedButton
-                        ? Colors.red
-                        : Colors.grey[200],
+                color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -77,21 +73,26 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
 
               /// TEXT
               child: Center(
-                child: const Text('test string'),
-                // child: TextField(
-                //   controller: tocontroller,
-                //   enabled: false,
-                //   textAlign: TextAlign.center,
-                //   maxLines: 1,
-                //   style: TextStyle(
-                //       // backgroundColor: Colors.grey.shade100,
-                //       fontSize: state.page == 1
-                //           ? 32.0
-                //           : state.page == 2
-                //               ? 25.0
-                //               : 20.0,
-                //       fontWeight: FontWeight.w400),
-                // ),
+                child: TextField(
+                  controller: tocontroller,
+                  enabled: false,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: TextStyle(
+                      color: isGreenButton
+                          ? Colors.green
+                          : isRedButton
+                              ? Colors.red
+                              : Colors.black,
+                      // backgroundColor: Colors.grey.shade100,
+                      fontSize: state.page == 1
+                          ? 32.0
+                          : state.page == 2
+                              ? 25.0
+                              : 20.0,
+                      fontWeight:
+                          isGreenButton ? FontWeight.w800 : FontWeight.w400),
+                ),
               ),
             ),
           ),
