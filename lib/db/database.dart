@@ -42,6 +42,41 @@ class DBProvider {
     return translatesList;
   }
 
+// READ ONE Translate
+  Future<Translate> getTranslateByID(int id) async {
+    Database db = await database;
+    final List<Map<String, dynamic>> translatesMapList = await db.query(
+      currentLanguageTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (translatesMapList.isEmpty) {
+      developer.log('DB[54] Translate with ID $id not found');
+      return Translate(id, '');
+    } else {
+      final List<Translate> translatesList = [];
+      for (var translateMap in translatesMapList) {
+        translatesList.add(Translate.fromMap(translateMap));
+      }
+      // developer.log('DB[61] Read translate by ID $id success');
+      return translatesList[0];
+    }
+  }
+
+// READ SUM record Translate
+  Future<int> getSumTranslates() async {
+    Database db = await database;
+    final List<Map<String, dynamic>> translatesMapList =
+        await db.query(currentLanguageTable);
+    if (translatesMapList.isEmpty) {
+      developer.log('DB[51]: Translate list is empty');
+      return 0;
+    } else {
+      developer.log('DB[54]: ${translatesMapList.length} records in database');
+      return translatesMapList.length;
+    }
+  }
+
   // INSERT ONE translate
   Future<Translate> insertTranslate(Translate translate) async {
     Database db = await database;
@@ -55,11 +90,11 @@ class DBProvider {
 
       //           translate.result = result.toString().toLowerCase();
       translate.id = await db.insert(currentLanguageTable, translate.toMap());
-      developer.log('DB insert - translate '
+      developer.log('DB[72] insert - translate '
           '${translate.id}'
           ' not found, translate save');
     } else {
-      developer.log('DB insert - translate '
+      developer.log('DB[76] insert - translate '
           '${translate.id}'
           ' found, translate update');
       updateTranslate(translate);

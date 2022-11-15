@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
@@ -25,6 +27,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
   _translateLang(input) {
     translator.translate(input, to: 'tr').then((resault) {
       tocontroller.text = resault.toString().toLowerCase();
+      developer.log('tocontroller.text - ${tocontroller.text}');
     });
   }
 
@@ -33,9 +36,12 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (!state.buttonHelpPressed && !state.buttomPressed) {
-          _translateLang(state.textButton[widget.number]);
-        }
+        // if (!state.buttonHelpPressed && !state.buttomPressed) {
+        //   developer.log('new - ${state.listButton}');
+        //   _translateLang(state.textButton[widget.number]);
+        // }
+        var thisTextButton =
+            globals.translateList[state.listButton[widget.number]].result;
         isRedButton = state.buttonChoise == widget.number &&
             state.buttonChoise != state.truePosition &&
             state.buttomPressed;
@@ -73,11 +79,14 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
 
               /// TEXT
               child: Center(
-                child: TextField(
-                  controller: tocontroller,
-                  enabled: false,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
+                child: Text(
+                  thisTextButton,
+                  // TextField(
+                  //   controller: tocontroller,
+                  //   enabled: false,
+                  //   textAlign: TextAlign.center,
+                  //   maxLines: 1,
+                  // developer.log(globals.translateList[3].result);
                   style: TextStyle(
                       color: isGreenButton
                           ? Colors.green

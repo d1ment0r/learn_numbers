@@ -1,6 +1,9 @@
 import 'dart:developer' as developer;
+import 'package:learn_numbers/models/globals.dart' as globals;
 import 'dart:math';
 
+import 'package:learn_numbers/models/globals.dart';
+import 'package:learn_numbers/models/translate.dart';
 import 'package:number_to_words/number_to_words.dart';
 
 class AppState {
@@ -14,6 +17,7 @@ class AppState {
   late int target;
   late int truePosition;
   late List<String> textButton;
+  List<int> listButton = [0, 0, 0];
 
   AppState({
     required this.page,
@@ -26,6 +30,7 @@ class AppState {
     required this.buttonChoise,
     required this.truePosition,
     required this.textButton,
+    required this.listButton,
   }) {
     developer.log('State - AppState');
   }
@@ -58,6 +63,32 @@ class AppState {
       varTwo = getRandomTarget(page);
     }
     truePosition = Random().nextInt(3);
+    // Заполняем кнопки объектами - переходная модель
+    switch (truePosition) {
+      case 0:
+        {
+          listButton[0] = target;
+          listButton[1] = varOne;
+          listButton[2] = varTwo;
+          break;
+        }
+      case 1:
+        {
+          listButton[0] = varOne;
+          listButton[1] = target;
+          listButton[2] = varTwo;
+          break;
+        }
+      case 2:
+        {
+          listButton[0] = varOne;
+          listButton[1] = varTwo;
+          listButton[2] = target;
+          break;
+        }
+    }
+
+    // Старая модель заполнения
     textButton = [
       truePosition == 0
           ? getTranslateTarget(target)

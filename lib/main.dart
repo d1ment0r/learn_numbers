@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_numbers/screens/choise_screen.dart';
+import 'package:learn_numbers/screens/choise_language_screen.dart';
 import 'package:learn_numbers/screens/splash_screen.dart';
 import 'package:learn_numbers/themes/theme.dart';
 
@@ -20,10 +20,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
+      // home: const SplashScreen(),
+      home: const ChoiseLanguageScreen(),
       routes: <String, WidgetBuilder>{
         '/splash': (BuildContext context) => const SplashScreen(),
-        '/choise': (BuildContext context) => const ChoiseScreen(),
+        '/choise': (BuildContext context) => const ChoiseLanguageScreen(),
         // '/main': (BuildContext context) => const MainScreen(title: 'Turkish'),
       },
     );

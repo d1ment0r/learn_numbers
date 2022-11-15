@@ -62,6 +62,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         page: state.page,
         truePosition: state.truePosition,
         textButton: state.textButton,
+        listButton: state.listButton,
       ));
     });
     on<PressButtonHelpEvent>((event, emit) {
@@ -78,6 +79,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         page: state.page,
         truePosition: state.truePosition,
         textButton: state.textButton,
+        listButton: state.listButton,
       ));
     });
     on<UpdateScreenEvent>((event, emit) {
