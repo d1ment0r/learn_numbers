@@ -1,6 +1,7 @@
 // import 'dart:developer' as developer;
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
@@ -20,20 +21,25 @@ class ButtonChoiseWidget extends StatefulWidget {
 class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
   bool isRedButton = false;
   bool isGreenButton = false;
+  bool _isElevated = false;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        String thisTextButton =
-            globals.sortingMap[state.listButton[widget.number]];
+        String thisTextButton = state.buttonReverse
+            ? globals.sortingMap[state.listButton[widget.number]]
+            : state.listButton[widget.number].toString();
         isRedButton = state.buttonChoise == widget.number &&
             state.buttonChoise != state.truePosition &&
             state.buttomPressed;
         isGreenButton =
             state.buttonHelpPressed && state.truePosition == widget.number;
         state.buttomPressed && widget.number != state.truePosition;
+        _isElevated = state.buttomPressed &&
+            state.buttonChoise == widget.number &&
+            state.buttonChoise == state.truePosition;
         return Center(
           child: GestureDetector(
             onTap: () {
@@ -41,26 +47,44 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                   .read<AppBlocBloc>()
                   .add(PressButtonChoiseEvent(widget.number));
             },
-            child: Container(
+            child: AnimatedContainer(
+              duration: const Duration(microseconds: 300),
               margin: const EdgeInsets.only(top: 20, left: 40.0, right: 40.0),
               height: 48,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade500,
-                    spreadRadius: -1,
-                    blurRadius: 8,
-                    offset: const Offset(4, 4),
-                  ),
-                  const BoxShadow(
-                    color: Colors.white,
-                    spreadRadius: -2,
-                    blurRadius: 8,
-                    offset: Offset(-4, -4),
-                  ),
-                ],
+                boxShadow: !_isElevated
+                    ? [
+                        BoxShadow(
+                          color: Colors.grey.shade500,
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: const Offset(4, 4),
+                        ),
+                        const BoxShadow(
+                          color: Colors.white,
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(-4, -4),
+                        ),
+                      ]
+                    : [
+                        const BoxShadow(
+                          offset: Offset(-3, -3),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                          color: Colors.white,
+                          inset: true,
+                        ),
+                        BoxShadow(
+                          offset: const Offset(3, 3),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                          color: Colors.grey.shade500,
+                          inset: true,
+                        )
+                      ],
               ),
 
               /// TEXT
@@ -78,8 +102,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                           : state.page == 2
                               ? 25.0
                               : 23.0,
-                      fontWeight:
-                          isGreenButton ? FontWeight.w800 : FontWeight.w400),
+                      fontWeight: FontWeight.w500),
                 ),
               ),
             ),

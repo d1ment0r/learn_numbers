@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:learn_numbers/screens/choise_language_screen.dart';
 import 'package:learn_numbers/screens/splash_screen.dart';
 import 'package:learn_numbers/themes/theme.dart';
 

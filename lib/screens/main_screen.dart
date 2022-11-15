@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'one_screen.dart';
 import 'ten_screen.dart';
 import 'hundred_screen.dart';
@@ -32,10 +32,21 @@ class _MainScreenState extends State<MainScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.amber[900],
         title: Text(widget.title),
+        backgroundColor: Colors.amber[800],
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.rotate_90_degrees_cw,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              //
+            },
+          )
+        ],
       ),
       body: PageView(
         controller: _pageController,

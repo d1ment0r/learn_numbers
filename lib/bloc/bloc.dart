@@ -56,6 +56,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         buttomPressed: true,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
+        buttonReverse: state.buttonReverse,
         wrong: state.wrong,
         good: state.good,
         target: state.target,
@@ -72,6 +73,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         buttomPressed: false,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
+        buttonReverse: state.buttonReverse,
         wrong: state.wrong,
         good: state.good,
         target: state.target,
@@ -80,6 +82,24 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         listButton: state.listButton,
       ));
     });
+    on<PressButtonReversEvent>((event, emit) {
+      state.buttonReverse = !state.buttonReverse;
+      developer.log('Event - PressButtonHelpEvent');
+      emit(AppState(
+        counter: state.counter,
+        buttomPressed: state.buttomPressed,
+        buttonHelpPressed: state.buttonHelpPressed,
+        buttonChoise: state.buttonChoise,
+        buttonReverse: state.buttonReverse,
+        wrong: state.wrong,
+        good: state.good,
+        target: state.target,
+        page: state.page,
+        truePosition: state.truePosition,
+        listButton: state.listButton,
+      ));
+    });
+
     on<UpdateScreenEvent>((event, emit) {
       state.buttomPressed = false;
       developer.log('Event - UpdateScreenEvent');

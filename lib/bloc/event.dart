@@ -17,3 +17,7 @@ class PressButtonHelpEvent extends AppEvent {
 class UpdateScreenEvent extends AppEvent {
   UpdateScreenEvent();
 }
+
+class PressButtonReversEvent extends AppEvent {
+  PressButtonReversEvent();
+}

@@ -8,6 +8,7 @@ class AppState {
   int counter = 0;
   bool buttomPressed = false;
   bool buttonHelpPressed = false;
+  bool buttonReverse = false;
   int buttonChoise = 0;
   int wrong = 0;
   int good = 0;
@@ -23,6 +24,7 @@ class AppState {
     required this.good,
     required this.target,
     required this.buttomPressed,
+    required this.buttonReverse,
     required this.buttonHelpPressed,
     required this.buttonChoise,
     required this.truePosition,
