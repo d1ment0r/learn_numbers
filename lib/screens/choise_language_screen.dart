@@ -18,16 +18,17 @@ class ChoiseLanguageScreen extends StatefulWidget {
 class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   int _progress = 0;
   final int _sumTranslate = 3;
-  String currentLanguage = 'tr';
+  String currentLanguage = 'ru';
   bool currentLanguageDownload = false;
 
   getSumTranslate() async {
-    int _sumTranslate = await DBProvider.db.getSumTranslates();
+    int sumTranslate = await DBProvider.db.getSumTranslates();
     setState(() {
-      currentLanguageDownload = _sumTranslate == 1000;
-      developer.log('currentLanguageDownload - $currentLanguageDownload');
+      // Проверяем количество загруженных записей выбранного языка
+      currentLanguageDownload = sumTranslate == 1000;
+      developer.log(
+          'Choise screen[30]: currentLanguageDownload - $currentLanguageDownload');
     });
-    // developer.log('DB insert - $_sumTranslate ');
   }
 
   @override
@@ -35,8 +36,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     super.initState();
     getSumTranslate();
   }
-
-// Проверяем количество загруженных записей выбранного языка
 
   @override
   Widget build(BuildContext context) {
@@ -57,63 +56,156 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
               onTap: () async {
                 // Если текущий язык загружен считываем его в глобальный лист
                 if (currentLanguageDownload) {
-                  developer.log('Start read from DB');
-                  for (int id = 0; id < 100; id++) {
-                    await DBProvider.db.getTranslateByID(id).then((result) {
-                      globals.translateList.add(result);
-                    });
-                    if (id == 50) {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const MainScreen(title: 'Turkish')),
-                          (Route route) => false);
-                    }
+                  developer.log('CLS begin download from database');
+                  //
+                  // Первый и второй экран от 0 до 9 и от 10 до 29
+                  //
+                  for (int id = 0; id < 30; id++) {
+                    await DBProvider.db.getTranslateByID(id).then(
+                      (translate) {
+                        globals.numericMap
+                            .putIfAbsent(id, () => translate.result);
+                        // developer.log('CLS - 1 step id - $id');
+                      },
+                    );
+                  }
+                  //
+                  // Третий экран от 100 до 999
+                  //
+                  for (int id = 100; id < 1000; id++) {
+                    await DBProvider.db.getTranslateByID(id).then(
+                      (translate) {
+                        globals.numericMap
+                            .putIfAbsent(id, () => translate.result);
+                        // developer.log('CLS - 2 step id - $id');
+                        // Если частично агружены открываем первый экран
+                        //
+                        if (id == 121) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MainScreen(title: 'Turkish')),
+                              (Route route) => false);
+                        }
+                      },
+                    );
+                  }
+                  //
+                  // Заполняем недостающие элементы
+                  //
+                  for (int id = 30; id < 100; id++) {
+                    await DBProvider.db.getTranslateByID(id).then(
+                      (translate) {
+                        globals.numericMap
+                            .putIfAbsent(id, () => translate.result);
+                        // developer.log('CLS - 3 step id - $id');
+                        if (id == 99) {
+                          globals.allNumericAccess = true;
+                          // developer.log('CLS end download from database');
+                        }
+                      },
+                    );
                   }
                 } else {
-                  for (int id = 0; id < 1000; id++) {
+                  //
+                  // Первый и второй экран от 0 до 9 и от 10 до 29
+                  //
+                  for (int id = 0; id < 30; id++) {
+                    //
+                    // Этап первый - число в английский
                     var english =
                         id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
+                    //
+                    // Этап второй - английский в выбранный язык
                     await translator
-                        .translate(english, to: 'tr')
+                        .translate(english, to: currentLanguage)
                         .then((result) {
-                      // translateList
-                      //     .add(Translate(id, result.toString().toLowerCase()));
-                      DBProvider.db
-                          .insertTranslate(Translate(id, result.toString()));
-
-                      if (id < 50) {
+                      //
+                      // Этап третий - пишем в базу добавляя к глобальному списку
+                      String trueResult = result.toString().toLowerCase();
+                      DBProvider.db.insertTranslate(Translate(id, trueResult));
+                      globals.numericMap.putIfAbsent(id, () => trueResult);
+                      developer.log('CLS - 1 step id - $id');
+                      //
+                      // Показываем прогресс бар
+                      if (id < 51) {
                         setState(() {
                           _progress = id * 2;
                         });
                       }
-
-                      // TODO: Загружаться должны первый десяток
-                      // TODO: + первые 20 чисел из второго экрана
-                      // TODO: + первые 20 чисел из третьего экрана
-                      // после этого генериться событие DownloadComplted
-                      // и меняется допустимый диапазон для рандномного выбора
-                      if (id == 50) {
-                        developer.log('id $id}');
-                        // Navigator.pushNamed(
-                        //   context,
-                        //   '/main',
-                        // );
-                        // }
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const MainScreen(title: 'Turkish')),
-                            (Route route) => false);
+                    });
+                  }
+                  //
+                  // Третий экран от 100 до 999
+                  //
+                  for (int id = 100; id < 1000; id++) {
+                    //
+                    // Этап первый - число в английский
+                    var english =
+                        id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
+                    //
+                    // Этап второй - английский в выбранный язык
+                    await translator
+                        .translate(english, to: currentLanguage)
+                        .then(
+                      (result) {
+                        //
+                        // Этап третий - пишем в базу добавляя к глобальному списку
+                        String trueResult = result.toString().toLowerCase();
+                        DBProvider.db
+                            .insertTranslate(Translate(id, trueResult));
+                        globals.numericMap.putIfAbsent(id, () => trueResult);
+                        developer.log('CLS - 2 step id - $id');
+                        //
+                        // Показываем прогресс бар
+                        if (id - 70 < 51) {
+                          setState(() {
+                            _progress = (id - 70) * 2;
+                          });
+                        }
+                        //
+                        // Если частично агружены открываем первый экран
+                        //
+                        if (id == 121) {
+                          developer.log('id $id}');
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MainScreen(title: 'Turkish')),
+                              (Route route) => false);
+                        }
+                      },
+                    );
+                  }
+                  //
+                  // Заполняем недостающие элементы
+                  //
+                  for (int id = 30; id < 100; id++) {
+                    //
+                    // Этап первый - число в английский
+                    //
+                    var english =
+                        id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
+                    //
+                    // Этап второй - английский в выбранный язык
+                    //
+                    await translator
+                        .translate(english, to: 'tr')
+                        .then((result) {
+                      //
+                      // Этап третий - пишем в базу добавляя к глобальному списку
+                      //
+                      String trueResult = result.toString().toLowerCase();
+                      DBProvider.db.insertTranslate(Translate(id, trueResult));
+                      globals.numericMap.putIfAbsent(id, () => trueResult);
+                      if (id == 99) {
+                        globals.allNumericAccess = true;
+                        // developer.log('CLS end save to database');
                       }
-                      if (id >= 99) {
-                        developer.log('id $id}');
-                      }
+                      // developer.log('CLS - 3 step id - $id');
                     });
                   }
                 }
-                developer.log(
-                    'Choise screen: end button choise language ${TimeOfDay.now()}');
               },
               child: Container(
                 height: 50.0,

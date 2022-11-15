@@ -69,10 +69,10 @@ class DBProvider {
     final List<Map<String, dynamic>> translatesMapList =
         await db.query(currentLanguageTable);
     if (translatesMapList.isEmpty) {
-      developer.log('DB[51]: Translate list is empty');
+      developer.log('DB[72]: Translate list is empty');
       return 0;
     } else {
-      developer.log('DB[54]: ${translatesMapList.length} records in database');
+      developer.log('DB[75]: ${translatesMapList.length} records in database');
       return translatesMapList.length;
     }
   }
@@ -90,13 +90,13 @@ class DBProvider {
 
       //           translate.result = result.toString().toLowerCase();
       translate.id = await db.insert(currentLanguageTable, translate.toMap());
-      developer.log('DB[72] insert - translate '
+      developer.log('DB[93] insert - translate '
           '${translate.id}'
-          ' not found, translate save');
+          ' not found, translate save  text: ${translate.result}');
     } else {
-      developer.log('DB[76] insert - translate '
+      developer.log('DB[97] insert - translate '
           '${translate.id}'
-          ' found, translate update');
+          ' found, translate update text: ${translate.result}');
       updateTranslate(translate);
     }
     return translate;

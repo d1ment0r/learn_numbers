@@ -1,5 +1,6 @@
 library globals;
 
-import 'package:learn_numbers/models/translate.dart';
+import 'dart:collection';
 
-List<Translate> translateList = [];
+HashMap numericMap = HashMap<int, String>();
+bool allNumericAccess = false;

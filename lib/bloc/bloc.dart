@@ -61,7 +61,6 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         target: state.target,
         page: state.page,
         truePosition: state.truePosition,
-        textButton: state.textButton,
         listButton: state.listButton,
       ));
     });
@@ -78,7 +77,6 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         target: state.target,
         page: state.page,
         truePosition: state.truePosition,
-        textButton: state.textButton,
         listButton: state.listButton,
       ));
     });

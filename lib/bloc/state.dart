@@ -1,9 +1,7 @@
 import 'dart:developer' as developer;
-import 'package:learn_numbers/models/globals.dart' as globals;
 import 'dart:math';
+import 'package:learn_numbers/models/globals.dart' as globals;
 
-import 'package:learn_numbers/models/globals.dart';
-import 'package:learn_numbers/models/translate.dart';
 import 'package:number_to_words/number_to_words.dart';
 
 class AppState {
@@ -16,7 +14,6 @@ class AppState {
   late int page;
   late int target;
   late int truePosition;
-  late List<String> textButton;
   List<int> listButton = [0, 0, 0];
 
   AppState({
@@ -29,7 +26,6 @@ class AppState {
     required this.buttonHelpPressed,
     required this.buttonChoise,
     required this.truePosition,
-    required this.textButton,
     required this.listButton,
   }) {
     developer.log('State - AppState');
@@ -47,8 +43,6 @@ class AppState {
   }) {
     // pause();
     int target = this.target;
-    List<String> textButton = ['', '', ''];
-    // print('target $target this.target ${this.target}');
     target = getRandomTarget(page);
     // print('target $target this.target ${this.target}');
     while (target == this.target) {
@@ -88,37 +82,31 @@ class AppState {
         }
     }
 
-    // Старая модель заполнения
-    textButton = [
-      truePosition == 0
-          ? getTranslateTarget(target)
-          : getTranslateTarget(varOne),
-      truePosition == 1
-          ? getTranslateTarget(target)
-          : truePosition == 2
-              ? getTranslateTarget(varTwo)
-              : getTranslateTarget(varOne),
-      truePosition == 2
-          ? getTranslateTarget(target)
-          : getTranslateTarget(varTwo),
-    ];
-    // print('$textButton target $target');
-    this.textButton = textButton;
     this.target = target;
     buttonHelpPressed = false;
     // this.truePosition = truePosition;
-    developer.log('State - AppState.update target($target)');
+    developer.log(
+        'State - AppState.update target($target) dowload: ${globals.allNumericAccess}');
   }
 }
 
+// Random().nextInt(100) + 50; // Value is >= 50 and < 150.
 int getRandomTarget(int page) {
   switch (page) {
     case 1:
-      return Random().nextInt(10);
+      return Random().nextInt(10); // >= 0 and < 10
     case 2:
-      return Random().nextInt(90) + 10;
+      if (globals.allNumericAccess) {
+        return Random().nextInt(90) + 10; // >= 10 and < 100
+      } else {
+        return Random().nextInt(20) + 10; // >= 10 and < 30
+      }
     case 3:
-      return Random().nextInt(900) + 100;
+      if (globals.allNumericAccess) {
+        return Random().nextInt(900) + 100; // >= 100 and < 1000
+      } else {
+        return Random().nextInt(20) + 100; // >= 100 and < 120
+      }
     default:
       return 0;
   }

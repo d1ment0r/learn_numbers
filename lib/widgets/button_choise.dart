@@ -1,10 +1,9 @@
-import 'dart:developer' as developer;
+// import 'dart:developer' as developer;
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
-import 'package:translator/translator.dart';
 
 class ButtonChoiseWidget extends StatefulWidget {
   const ButtonChoiseWidget({
@@ -19,29 +18,16 @@ class ButtonChoiseWidget extends StatefulWidget {
 }
 
 class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
-  final translator = GoogleTranslator();
-  final TextEditingController tocontroller = TextEditingController();
   bool isRedButton = false;
   bool isGreenButton = false;
-
-  _translateLang(input) {
-    translator.translate(input, to: 'tr').then((resault) {
-      tocontroller.text = resault.toString().toLowerCase();
-      developer.log('tocontroller.text - ${tocontroller.text}');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        // if (!state.buttonHelpPressed && !state.buttomPressed) {
-        //   developer.log('new - ${state.listButton}');
-        //   _translateLang(state.textButton[widget.number]);
-        // }
         var thisTextButton =
-            globals.translateList[state.listButton[widget.number]].result;
+            globals.numericMap[state.listButton[widget.number]];
         isRedButton = state.buttonChoise == widget.number &&
             state.buttonChoise != state.truePosition &&
             state.buttomPressed;
@@ -81,19 +67,12 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
               child: Center(
                 child: Text(
                   thisTextButton,
-                  // TextField(
-                  //   controller: tocontroller,
-                  //   enabled: false,
-                  //   textAlign: TextAlign.center,
-                  //   maxLines: 1,
-                  // developer.log(globals.translateList[3].result);
                   style: TextStyle(
                       color: isGreenButton
                           ? Colors.green
                           : isRedButton
                               ? Colors.red
                               : Colors.black,
-                      // backgroundColor: Colors.grey.shade100,
                       fontSize: state.page == 1
                           ? 32.0
                           : state.page == 2
