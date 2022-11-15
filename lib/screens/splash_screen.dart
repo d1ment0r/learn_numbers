@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:learn_numbers/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +26,13 @@ class _SplashScreenState extends State<SplashScreen> {
     if (selectedLanguage != null) {
       skipChoiseLanguage = selectedLanguage;
     }
+    skipChoiseLanguage = true;
+    globals.allNumericAccess = true;
+    var jsonText = await rootBundle.loadString('assets/json/tr.json');
+    Map<String, dynamic> data = json.decode(jsonText);
+    data.forEach((key, value) {
+      globals.sortingMap.putIfAbsent(int.parse(key), () => value.toString());
+    });
     await Future.delayed(
       const Duration(seconds: 3),
     );

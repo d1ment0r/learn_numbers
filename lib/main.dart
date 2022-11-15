@@ -20,11 +20,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      // home: const SplashScreen(),
-      home: const ChoiseLanguageScreen(),
+      home: const SplashScreen(),
+      // home: const ChoiseLanguageScreen(),
       routes: <String, WidgetBuilder>{
         '/splash': (BuildContext context) => const SplashScreen(),
-        '/choise': (BuildContext context) => const ChoiseLanguageScreen(),
+        // '/choise': (BuildContext context) => const ChoiseLanguageScreen(),
         // '/main': (BuildContext context) => const MainScreen(title: 'Turkish'),
       },
     );

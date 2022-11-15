@@ -48,6 +48,7 @@ dependencies:
   path_provider: ^2.0.11
   equatable: ^2.0.5
   percent_indicator: ^4.2.2
+  json_store: ^2.0.0
   
 
 dev_dependencies:
@@ -75,6 +76,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/flags/
+    - assets/json/
     - assets/sound/
   # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

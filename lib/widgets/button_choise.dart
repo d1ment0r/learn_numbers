@@ -26,8 +26,8 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var thisTextButton =
-            globals.numericMap[state.listButton[widget.number]];
+        String thisTextButton =
+            globals.sortingMap[state.listButton[widget.number]];
         isRedButton = state.buttonChoise == widget.number &&
             state.buttonChoise != state.truePosition &&
             state.buttomPressed;
@@ -77,7 +77,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                           ? 32.0
                           : state.page == 2
                               ? 25.0
-                              : 20.0,
+                              : 23.0,
                       fontWeight:
                           isGreenButton ? FontWeight.w800 : FontWeight.w400),
                 ),
