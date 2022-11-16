@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:learn_numbers/models/country.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 
@@ -57,7 +58,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
           (Route route) => false);
       FlutterNativeSplash.remove();
     } else {
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 2));
       FlutterNativeSplash.remove();
     }
   }
@@ -208,7 +209,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   onChangeDropdownItem(CountryData selectedCompany) {
     setState(() {
       _selectedCompany = selectedCompany;
-      selectedDictionary = selectedCompany.dictionary;
+      // selectedDictionary = selectedCompany.dictionary;
     });
   }
 
