@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer' as developer;
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:audioplayers/audio_cache.dart';
-import 'package:bloc/bloc.dart';
 import 'state.dart';
 part 'event.dart';
 
@@ -26,6 +26,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
           target: 0,
           buttomPressed: false,
           buttonHelpPressed: false,
+          buttonReverse: false,
           truePosition: 0,
         )) {
     on<PressButtonChoiseEvent>((event, emit) {
@@ -112,6 +113,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         target: state.target,
         page: state.page,
         truePosition: state.truePosition,
+        buttonReverse: state.buttonReverse,
       ));
     });
   }

@@ -41,6 +41,7 @@ class AppState {
     required this.target,
     required this.buttomPressed,
     required this.buttonHelpPressed,
+    required this.buttonReverse,
     required this.truePosition,
   }) {
     // pause();
@@ -86,7 +87,6 @@ class AppState {
 
     this.target = target;
     buttonHelpPressed = false;
-    // this.truePosition = truePosition;
     developer.log(
         'State - AppState.update target($target) dowload: ${globals.allNumericAccess}');
   }

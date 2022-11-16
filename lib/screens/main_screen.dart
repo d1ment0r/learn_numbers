@@ -1,7 +1,8 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
 import 'one_screen.dart';
-import 'ten_screen.dart';
-import 'hundred_screen.dart';
+import 'two_screen.dart';
+import 'three_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.title});
@@ -12,6 +13,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   int _currentPage = 0;
 
   final PageController _pageController = PageController(initialPage: 0);
@@ -35,11 +41,12 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: Colors.amber[800],
+        backgroundColor: const Color(0xFF3399CC),
+        // backgroundColor: const Color(0xFFFF6600),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.rotate_90_degrees_cw,
+              Icons.settings,
               color: Colors.white,
             ),
             onPressed: () {

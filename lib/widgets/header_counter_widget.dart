@@ -1,3 +1,6 @@
+import 'dart:developer' as developer;
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -5,13 +8,28 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
 
-class HeaderCounterWidget extends StatelessWidget {
+class HeaderCounterWidget extends StatefulWidget {
   const HeaderCounterWidget({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<HeaderCounterWidget> createState() => _HeaderCounterWidgetState();
+}
+
+class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
+  bool _isElevated = false;
+
+  @override
   Widget build(BuildContext context) {
+    if (_isElevated) {
+      Future.delayed(const Duration(milliseconds: 150), () {
+        developer.log('press reverse button');
+        context.read<AppBlocBloc>().add(PressButtonReversEvent());
+        _isElevated = false;
+      });
+      //
+    }
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -52,9 +70,12 @@ class HeaderCounterWidget extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20.0, right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  context.read<AppBlocBloc>().add(PressButtonReversEvent());
+                  setState(() {
+                    _isElevated = true;
+                  });
                 },
-                child: Container(
+                child: AnimatedContainer(
+                  duration: const Duration(microseconds: 250),
                   height: 30.0,
                   width: 30.0,
                   decoration: BoxDecoration(
@@ -62,21 +83,21 @@ class HeaderCounterWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                     image: const DecorationImage(
                       image: Svg('assets/images/rotate.svg',
-                          size: Size(22.0, 22.0), color: Colors.black),
+                          size: Size(24.0, 24.0), color: Colors.black),
                     ),
-                    boxShadow: state.buttonReverse
+                    boxShadow: !_isElevated
                         ? [
                             BoxShadow(
                               color: Colors.grey.shade500,
-                              spreadRadius: 2,
-                              blurRadius: 1,
-                              offset: const Offset(2, 2),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: const Offset(4, 4),
                             ),
                             const BoxShadow(
                               color: Colors.white,
                               spreadRadius: 2,
-                              blurRadius: 1,
-                              offset: Offset(-2, -2),
+                              blurRadius: 8,
+                              offset: Offset(-4, -4),
                             ),
                           ]
                         : null,

@@ -1,8 +1,15 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:learn_numbers/models/country.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:learn_numbers/models/globals.dart' as globals;
+
+import 'main_screen.dart';
 
 class ChoiseLanguageScreen extends StatefulWidget {
   const ChoiseLanguageScreen({super.key});
@@ -27,8 +34,37 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     super.initState();
   }
 
+  void parsingJSON() async {
+    bool skipChoiseLanguage = false;
+    // final prefs = await SharedPreferences.getInstance();
+    // final bool? selectedLanguage = prefs.getBool('selectedLanguage');
+    // if (selectedLanguage != null) {
+    //   skipChoiseLanguage = selectedLanguage;
+    // }
+    skipChoiseLanguage = true;
+    globals.allNumericAccess = true;
+    var jsonText = await rootBundle.loadString('assets/json/tr.json');
+    Map<String, dynamic> data = json.decode(jsonText);
+    data.forEach((key, value) {
+      globals.sortingMap.putIfAbsent(int.parse(key), () => value.toString());
+    });
+    if (globals.sortingMap.isNotEmpty) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => const MainScreen(
+                    title: 'Turkish',
+                  )),
+          (Route route) => false);
+      FlutterNativeSplash.remove();
+    } else {
+      await Future.delayed(const Duration(seconds: 1));
+      FlutterNativeSplash.remove();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    parsingJSON();
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Center(
