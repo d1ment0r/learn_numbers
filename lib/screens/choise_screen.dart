@@ -43,7 +43,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     //   skipChoiseLanguage = selectedLanguage;
     // }
     skipChoiseLanguage = true;
-    globals.allNumericAccess = true;
     var jsonText = await rootBundle.loadString('assets/json/tr.json');
     Map<String, dynamic> data = json.decode(jsonText);
     data.forEach((key, value) {
@@ -56,6 +55,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                     title: 'Turkish',
                   )),
           (Route route) => false);
+      await Future.delayed(const Duration(seconds: 1));
       FlutterNativeSplash.remove();
     } else {
       await Future.delayed(const Duration(seconds: 2));
@@ -79,9 +79,9 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
               child: DropdownButton(
-                value: _selectedCompany!,
+                // value: _selectedCompany!,
+                // items: dropdownMenuItems,
                 items: dropdownMenuItems,
-                // items: CountryData.getCounties().map((CountryData)),
                 onChanged: onChangeDropdownItem(_selectedCompany!),
               ),
             ),
@@ -89,102 +89,102 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
             const SizedBox(
               height: 150.0,
             ),
-            GestureDetector(
-              onTap: () async {
-                setState(() {
-                  _isElevated = !_isElevated;
-                });
-              },
-              child: AnimatedContainer(
-                  duration: const Duration(microseconds: 300),
-                  height: 80,
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: _isElevated
-                        ? [
-                            BoxShadow(
-                              color: Colors.grey.shade500,
-                              spreadRadius: 1,
-                              blurRadius: 8,
-                              offset: const Offset(4, 4),
-                            ),
-                            const BoxShadow(
-                              color: Colors.white,
-                              spreadRadius: 2,
-                              blurRadius: 8,
-                              offset: Offset(-4, -4),
-                            ),
-                          ]
-                        : const [
-                            BoxShadow(
-                              offset: Offset(-4, -4),
-                              blurRadius: 8,
-                              color: Colors.white,
-                              inset: true,
-                            ),
-                            BoxShadow(
-                              offset: Offset(4, 4),
-                              blurRadius: 8,
-                              color: Color(0xFFBEBEBE),
-                              inset: true,
-                            )
-                          ],
-                  )),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.center,
-                child: _progress == 0
-                    ? GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            _isElevated = !_isElevated;
-                          });
-                          // loadJsonData();
-                        },
-                        child: Container(
-                          height: 50.0,
-                          width: 50.0,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(25),
-                            image: const DecorationImage(
-                              image: Svg('assets/images/download.svg',
-                                  size: Size(25.0, 25.0), color: Colors.black),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade500,
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset: const Offset(4, 4),
-                              ),
-                              const BoxShadow(
-                                color: Colors.white,
-                                spreadRadius: 2,
-                                blurRadius: 8,
-                                offset: Offset(-4, -4),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : CircularPercentIndicator(
-                        radius: 60.0,
-                        lineWidth: 15.0,
-                        percent: _progress % 1,
-                        animation: false,
-                        animationDuration: 1500,
-                        center: Text(
-                          '${_progress % 1} %',
-                          style: const TextStyle(fontSize: 20.0),
-                        ),
-                        progressColor: Colors.amber[900],
-                      ),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () async {
+            //     setState(() {
+            //       _isElevated = !_isElevated;
+            //     });
+            //   },
+            //   child: AnimatedContainer(
+            //       duration: const Duration(microseconds: 300),
+            //       height: 80,
+            //       width: 200,
+            //       decoration: BoxDecoration(
+            //         color: Colors.grey[200],
+            //         borderRadius: BorderRadius.circular(50),
+            //         boxShadow: _isElevated
+            //             ? [
+            //                 BoxShadow(
+            //                   color: Colors.grey.shade500,
+            //                   spreadRadius: 1,
+            //                   blurRadius: 8,
+            //                   offset: const Offset(4, 4),
+            //                 ),
+            //                 const BoxShadow(
+            //                   color: Colors.white,
+            //                   spreadRadius: 2,
+            //                   blurRadius: 8,
+            //                   offset: Offset(-4, -4),
+            //                 ),
+            //               ]
+            //             : const [
+            //                 BoxShadow(
+            //                   offset: Offset(-4, -4),
+            //                   blurRadius: 8,
+            //                   color: Colors.white,
+            //                   inset: true,
+            //                 ),
+            //                 BoxShadow(
+            //                   offset: Offset(4, 4),
+            //                   blurRadius: 8,
+            //                   color: Color(0xFFBEBEBE),
+            //                   inset: true,
+            //                 )
+            //               ],
+            //       )),
+            // ),
+            // Expanded(
+            //   child: Align(
+            //     alignment: Alignment.center,
+            //     child: _progress == 0
+            //         ? GestureDetector(
+            //             onTap: () async {
+            //               setState(() {
+            //                 _isElevated = !_isElevated;
+            //               });
+            //               // loadJsonData();
+            //             },
+            //             child: Container(
+            //               height: 50.0,
+            //               width: 50.0,
+            //               decoration: BoxDecoration(
+            //                 color: Colors.grey[200],
+            //                 borderRadius: BorderRadius.circular(25),
+            //                 image: const DecorationImage(
+            //                   image: Svg('assets/images/download.svg',
+            //                       size: Size(25.0, 25.0), color: Colors.black),
+            //                 ),
+            //                 boxShadow: [
+            //                   BoxShadow(
+            //                     color: Colors.grey.shade500,
+            //                     spreadRadius: 1,
+            //                     blurRadius: 8,
+            //                     offset: const Offset(4, 4),
+            //                   ),
+            //                   const BoxShadow(
+            //                     color: Colors.white,
+            //                     spreadRadius: 2,
+            //                     blurRadius: 8,
+            //                     offset: Offset(-4, -4),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           )
+            //         : CircularPercentIndicator(
+            //             radius: 60.0,
+            //             lineWidth: 15.0,
+            //             percent: _progress % 1,
+            //             animation: false,
+            //             animationDuration: 1500,
+            //             center: Text(
+            //               '${_progress % 1} %',
+            //               style: const TextStyle(fontSize: 20.0),
+            //             ),
+            //             progressColor: Colors.amber[900],
+            //           ),
+            //   ),
+            // ),
             // const SizedBox(
             //   height: 50,
             // ),

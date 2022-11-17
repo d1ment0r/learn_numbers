@@ -28,9 +28,6 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
-        String thisTextButton = state.buttonReverse
-            ? globals.sortingMap[state.listButton[widget.number]]
-            : state.listButton[widget.number].toString();
         isRedButton = state.buttonChoise == widget.number &&
             state.buttonChoise != state.truePosition &&
             state.buttomPressed;
@@ -90,7 +87,9 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
               /// TEXT
               child: Center(
                 child: Text(
-                  thisTextButton,
+                  state.buttonReverse
+                      ? globals.sortingMap[state.listButton[widget.number]]
+                      : state.listButton[widget.number].toString(),
                   style: TextStyle(
                       color: isGreenButton
                           ? Colors.green
@@ -98,11 +97,19 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                               ? Colors.red
                               : Colors.black,
                       fontSize: state.page == 1
-                          ? 32.0
+                          ? !state.buttonReverse
+                              ? 30.0
+                              : 28.0
                           : state.page == 2
-                              ? 25.0
-                              : 23.0,
-                      fontWeight: FontWeight.w500),
+                              ? !state.buttonReverse
+                                  ? 30.0
+                                  : 25.0
+                              : !state.buttonReverse
+                                  ? 30.0
+                                  : 23.0,
+                      fontWeight: state.buttonReverse
+                          ? FontWeight.w500
+                          : FontWeight.w700),
                 ),
               ),
             ),

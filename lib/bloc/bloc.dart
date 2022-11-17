@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'package:learn_numbers/models/globals.dart' as globals;
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         buttomPressed: true,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
-        buttonReverse: state.buttonReverse,
+        buttonReverse: globals.reversMap,
         wrong: state.wrong,
         good: state.good,
         target: state.target,
@@ -84,14 +85,14 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
       ));
     });
     on<PressButtonReversEvent>((event, emit) {
-      state.buttonReverse = !state.buttonReverse;
+      globals.reversMap = !globals.reversMap;
       developer.log('Event - PressButtonHelpEvent');
       emit(AppState(
         counter: state.counter,
         buttomPressed: state.buttomPressed,
         buttonHelpPressed: state.buttonHelpPressed,
         buttonChoise: state.buttonChoise,
-        buttonReverse: state.buttonReverse,
+        buttonReverse: globals.reversMap,
         wrong: state.wrong,
         good: state.good,
         target: state.target,

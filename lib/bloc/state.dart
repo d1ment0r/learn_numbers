@@ -8,7 +8,7 @@ class AppState {
   int counter = 0;
   bool buttomPressed = false;
   bool buttonHelpPressed = false;
-  bool buttonReverse = false;
+  bool buttonReverse = globals.reversMap;
   int buttonChoise = 0;
   int wrong = 0;
   int good = 0;
@@ -46,6 +46,7 @@ class AppState {
   }) {
     // pause();
     int target = this.target;
+    buttonReverse = globals.reversMap;
     target = getRandomTarget(page);
     // print('target $target this.target ${this.target}');
     while (target == this.target) {
@@ -87,8 +88,7 @@ class AppState {
 
     this.target = target;
     buttonHelpPressed = false;
-    developer.log(
-        'State - AppState.update target($target) dowload: ${globals.allNumericAccess}');
+    developer.log('State - AppState.update target($target) ');
   }
 }
 
@@ -98,17 +98,9 @@ int getRandomTarget(int page) {
     case 1:
       return Random().nextInt(10); // >= 0 and < 10
     case 2:
-      if (globals.allNumericAccess) {
-        return Random().nextInt(90) + 10; // >= 10 and < 100
-      } else {
-        return Random().nextInt(20) + 10; // >= 10 and < 30
-      }
+      return Random().nextInt(90) + 10; // >= 10 and < 100
     case 3:
-      if (globals.allNumericAccess) {
-        return Random().nextInt(900) + 100; // >= 100 and < 1000
-      } else {
-        return Random().nextInt(20) + 100; // >= 100 and < 120
-      }
+      return Random().nextInt(900) + 100; // >= 100 and < 1000
     default:
       return 0;
   }

@@ -19,25 +19,30 @@ class TargetTextWinget extends StatelessWidget {
             context.read<AppBlocBloc>().add(UpdateScreenEvent());
           });
         }
-        return Container(
-          margin: const EdgeInsets.all(0),
-          child: Text(
-            state.buttonReverse
-                ? state.target.toString()
-                : globals.sortingMap[state.target],
-            textAlign: TextAlign.center,
-            style: TextStyle(
+        return SizedBox(
+          height: 160,
+          child: Center(
+            child: Text(
+              state.buttonReverse
+                  ? state.target.toString()
+                  : globals.sortingMap[state.target],
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 fontSize: state.page == 1
                     ? state.buttonReverse
-                        ? 160.0
+                        ? state.buttonReverse
+                            ? 150.0
+                            : 100.0
                         : 100.0
                     : state.page == 2
                         ? state.buttonReverse
-                            ? 155
-                            : 75.0
+                            ? 145.0
+                            : 70.0
                         : state.buttonReverse
-                            ? 160.0
-                            : 55.0),
+                            ? 140.0
+                            : 55.0,
+              ),
+            ),
           ),
         );
       },
