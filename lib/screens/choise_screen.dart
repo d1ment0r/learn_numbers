@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:learn_numbers/models/country.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 // import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
