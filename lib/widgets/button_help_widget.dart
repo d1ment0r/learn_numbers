@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
 
@@ -29,10 +28,13 @@ class ButtonHelpWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(25),
-                  image: const DecorationImage(
-                    image: Svg('assets/images/help_ok.svg',
-                        size: Size(25.0, 25.0), color: Color(0xFF3399CC)),
-                  ),
+                  // image: const DecorationImage(
+                  // image: SvgPicture(
+                  //   'assets/images/help_ok.svg',
+                  //   size: Size(25.0, 25.0),
+                  //   color: Color(0xFF3399CC),
+                  // ),
+                  // ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.shade500,

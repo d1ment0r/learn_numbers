@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
 
@@ -80,10 +80,10 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(25),
-                    image: const DecorationImage(
-                      image: Svg('assets/images/rotate.svg',
-                          size: Size(24.0, 24.0), color: Colors.black),
-                    ),
+                    // image: const DecorationImage(
+                    //   image: Svg('assets/images/rotate.svg',
+                    //       size: Size(24.0, 24.0), color: Colors.black),
+                    // ),
                     boxShadow: !_isElevated
                         ? [
                             BoxShadow(

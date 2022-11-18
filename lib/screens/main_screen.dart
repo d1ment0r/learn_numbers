@@ -1,4 +1,4 @@
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter/material.dart';
 
 import 'one_screen.dart';
 import 'two_screen.dart';
@@ -41,8 +41,8 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(widget.title),
+        // backgroundColor: const Color(0xFF3399CC),
         backgroundColor: const Color(0xFF3399CC),
-        // backgroundColor: const Color(0xFFFF6600),
         actions: <Widget>[
           IconButton(
             icon: const Icon(

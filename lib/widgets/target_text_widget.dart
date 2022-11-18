@@ -22,25 +22,28 @@ class TargetTextWinget extends StatelessWidget {
         return SizedBox(
           height: 160,
           child: Center(
-            child: Text(
-              state.buttonReverse
-                  ? state.target.toString()
-                  : globals.sortingMap[state.target],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: state.page == 1
-                    ? state.buttonReverse
-                        ? state.buttonReverse
-                            ? 150.0
-                            : 100.0
-                        : 100.0
-                    : state.page == 2
-                        ? state.buttonReverse
-                            ? 145.0
-                            : 70.0
-                        : state.buttonReverse
-                            ? 140.0
-                            : 55.0,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Text(
+                state.buttonReverse
+                    ? state.target.toString()
+                    : globals.sortingMap[state.target],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: state.page == 1
+                      ? state.buttonReverse
+                          ? state.buttonReverse
+                              ? 150.0
+                              : 100.0
+                          : 100.0
+                      : state.page == 2
+                          ? state.buttonReverse
+                              ? 145.0
+                              : 70.0
+                          : state.buttonReverse
+                              ? 140.0
+                              : 55.0,
+                ),
               ),
             ),
           ),
