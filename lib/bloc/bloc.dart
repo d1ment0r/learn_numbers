@@ -43,22 +43,13 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         state.wrong++;
         AudioPlayer(playerId: '/assets/sound/error-2.mp3').audioCache;
       }
-      // emit(AppState.update(
-      //   page: state.page,
-      //   counter: state.counter,
-      //   wrong: state.wrong,
-      //   good: state.good,
-      //   buttomPressed: false,
-      //   target: state.target,
-      //   truePosition: state.truePosition,
-      //   buttonHelpPressed: true,
-      // ));
       emit(AppState(
         counter: state.counter,
         buttomPressed: true,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
         buttonReverse: globals.reversMap,
+        soundOn: globals.soundOn,
         wrong: state.wrong,
         good: state.good,
         target: state.target,
@@ -67,16 +58,18 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         listButton: state.listButton,
       ));
     });
+
     on<PressButtonHelpEvent>((event, emit) {
       state.buttonHelpPressed = true;
       developer.log('Event - PressButtonHelpEvent');
-      emit(AppState(
+      emit(AppState.speech(
         counter: state.counter,
         buttomPressed: false,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
         buttonReverse: state.buttonReverse,
         wrong: state.wrong,
+        soundOn: globals.soundOn,
         good: state.good,
         target: state.target,
         page: state.page,
@@ -84,6 +77,29 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         listButton: state.listButton,
       ));
     });
+
+    on<ChangeSoundStateEvent>((event, emit) {
+      if (globals.soundOn) {
+        developer.log('Event - ChangeSoundStateEvent, sound: on');
+      } else {
+        developer.log('Event - ChangeSoundStateEvent, sound: off');
+      }
+      emit(AppState.speech(
+        counter: state.counter,
+        buttomPressed: state.buttomPressed,
+        buttonHelpPressed: state.buttonHelpPressed,
+        buttonChoise: state.buttonChoise,
+        buttonReverse: state.buttonReverse,
+        wrong: state.wrong,
+        soundOn: globals.soundOn,
+        good: state.good,
+        target: state.target,
+        page: state.page,
+        truePosition: state.truePosition,
+        listButton: state.listButton,
+      ));
+    });
+
     on<PressButtonReversEvent>((event, emit) {
       globals.reversMap = !globals.reversMap;
       developer.log('Event - PressButtonHelpEvent');
@@ -93,6 +109,7 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
         buttonHelpPressed: state.buttonHelpPressed,
         buttonChoise: state.buttonChoise,
         buttonReverse: globals.reversMap,
+        soundOn: globals.soundOn,
         wrong: state.wrong,
         good: state.good,
         target: state.target,

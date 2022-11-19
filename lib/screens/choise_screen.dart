@@ -32,6 +32,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     _selectedCompany = dropdownMenuItems[3].value;
     selectedDictionary = '';
     super.initState();
+    parsingJSON();
   }
 
   void parsingJSON() async {
@@ -54,17 +55,16 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                     title: 'Turkish',
                   )),
           (Route route) => false);
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 500));
       FlutterNativeSplash.remove();
     } else {
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       FlutterNativeSplash.remove();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    parsingJSON();
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Center(
@@ -192,18 +192,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       ),
     );
   }
-
-  // Future<void> loadJsonData() async {
-  //   var jsonText = await rootBundle.loadString(selectedDictionary);
-  //   Map<String, dynamic> data = json.decode(jsonText);
-  //   data.forEach((key, value) {
-  //     globals.numericMap.putIfAbsent(key, () => value);
-  //   });
-  //   // Navigator.of(context).pushAndRemoveUntil(
-  //   //                           MaterialPageRoute(
-  //   //                               builder: (context) =>
-  //   //                                   const MainScreen(title: 'Turkish'));
-  // }
 
   onChangeDropdownItem(CountryData selectedCompany) {
     setState(() {

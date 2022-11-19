@@ -10,8 +10,7 @@ class PressButtonChoiseEvent extends AppEvent {
 }
 
 class PressButtonHelpEvent extends AppEvent {
-  final int currentTarget;
-  PressButtonHelpEvent(this.currentTarget);
+  PressButtonHelpEvent();
 }
 
 class UpdateScreenEvent extends AppEvent {
@@ -20,4 +19,8 @@ class UpdateScreenEvent extends AppEvent {
 
 class PressButtonReversEvent extends AppEvent {
   PressButtonReversEvent();
+}
+
+class ChangeSoundStateEvent extends AppEvent {
+  ChangeSoundStateEvent();
 }

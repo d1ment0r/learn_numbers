@@ -45,40 +45,47 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                   .add(PressButtonChoiseEvent(widget.number));
             },
             child: AnimatedContainer(
-              duration: const Duration(microseconds: 300),
+              duration: const Duration(microseconds: 200),
               margin: const EdgeInsets.only(top: 20, left: 40.0, right: 40.0),
               height: 48,
               decoration: BoxDecoration(
-                color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.grey.shade100,
+                    Colors.grey.shade100,
+                  ],
+                ),
                 boxShadow: !_isElevated
                     ? [
-                        BoxShadow(
-                          color: Colors.grey.shade500,
+                        const BoxShadow(
+                          color: Color(0xffccd0d3),
                           spreadRadius: 1,
-                          blurRadius: 8,
-                          offset: const Offset(4, 4),
+                          blurRadius: 5,
+                          offset: Offset(4, 4),
                         ),
                         const BoxShadow(
                           color: Colors.white,
-                          spreadRadius: 2,
-                          blurRadius: 8,
+                          spreadRadius: 1,
+                          blurRadius: 5,
                           offset: Offset(-4, -4),
                         ),
                       ]
                     : [
                         const BoxShadow(
-                          offset: Offset(-3, -3),
-                          blurRadius: 8,
+                          color: Color(0xffffffff),
+                          offset: Offset(-4, -4),
+                          blurRadius: 5,
                           spreadRadius: 1,
-                          color: Colors.white,
                           inset: true,
                         ),
-                        BoxShadow(
-                          offset: const Offset(3, 3),
-                          blurRadius: 8,
+                        const BoxShadow(
+                          color: Color(0xffccd0d3),
+                          offset: Offset(4, 4),
+                          blurRadius: 5,
                           spreadRadius: 1,
-                          color: Colors.grey.shade500,
                           inset: true,
                         )
                       ],

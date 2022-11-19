@@ -3,12 +3,16 @@ import 'dart:math';
 import 'package:learn_numbers/models/globals.dart' as globals;
 
 import 'package:number_to_words/number_to_words.dart';
+import 'package:text_to_speech/text_to_speech.dart';
+
+TextToSpeech tts = TextToSpeech();
 
 class AppState {
   int counter = 0;
   bool buttomPressed = false;
   bool buttonHelpPressed = false;
   bool buttonReverse = globals.reversMap;
+  bool soundOn = globals.soundOn;
   int buttonChoise = 0;
   int wrong = 0;
   int good = 0;
@@ -26,11 +30,32 @@ class AppState {
     required this.buttomPressed,
     required this.buttonReverse,
     required this.buttonHelpPressed,
+    required this.soundOn,
     required this.buttonChoise,
     required this.truePosition,
     required this.listButton,
   }) {
     developer.log('State - AppState');
+  }
+
+  AppState.speech({
+    required this.page,
+    required this.counter,
+    required this.wrong,
+    required this.good,
+    required this.target,
+    required this.buttomPressed,
+    required this.buttonReverse,
+    required this.buttonHelpPressed,
+    required this.soundOn,
+    required this.buttonChoise,
+    required this.truePosition,
+    required this.listButton,
+  }) {
+    developer.log('State - AppState.speech');
+    if (soundOn) {
+      speak(globals.sortingMap[target]);
+    }
   }
 
   AppState.update({
@@ -44,7 +69,6 @@ class AppState {
     required this.buttonReverse,
     required this.truePosition,
   }) {
-    // pause();
     int target = this.target;
     buttonReverse = globals.reversMap;
     target = getRandomTarget(page);
@@ -88,7 +112,10 @@ class AppState {
 
     this.target = target;
     buttonHelpPressed = false;
-    developer.log('State - AppState.update target($target) ');
+    if (globals.soundOn) {
+      speak(globals.sortingMap[target]);
+    }
+    developer.log('State - AppState.update target $target');
   }
 }
 
@@ -108,4 +135,49 @@ int getRandomTarget(int page) {
 
 String getTranslateTarget(int target) {
   return target > 0 ? NumberToWord().convert('en-in', target) : 'zero';
+}
+
+Future<void> speak(sayText) async {
+  List<String> languages = <String>[];
+  List<String> languageCodes = <String>[];
+
+  // populate lang code (i.e. en-US)
+  languageCodes = await tts.getLanguages();
+
+  // populate displayed language (i.e. English)
+  final List<String>? displayLanguages = await tts.getDisplayLanguages();
+  if (displayLanguages == null) {
+    return;
+  }
+
+  languages.clear();
+  for (final dynamic lang in displayLanguages) {
+    languages.add(lang as String);
+  }
+
+  final String? defaultLangCode = await tts.getDefaultLanguage();
+
+  if (globals.languageCode != null &&
+      !languageCodes.contains(globals.languageCode)) {
+    if (globals.languageCode != null &&
+        languageCodes.contains(defaultLangCode)) {
+      globals.languageCode = defaultLangCode;
+    } else {
+      globals.languageCode = globals.defaultLanguageCode;
+    }
+  }
+  globals.language = await tts.getDisplayLanguageByCode(globals.languageCode!);
+
+  tts.setVolume(globals.volume);
+  tts.setRate(globals.rate);
+  if (globals.languageCode != null) {
+    tts.setLanguage(globals.languageCode!);
+    developer.log('Language set:  ${globals.languageCode}');
+  } else {
+    tts.setLanguage(globals.defaultLanguageCode);
+    developer.log('Language set: ${globals.defaultLanguageCode}');
+  }
+  tts.setPitch(globals.pitch);
+  await Future.delayed(const Duration(milliseconds: 500));
+  tts.speak(sayText);
 }

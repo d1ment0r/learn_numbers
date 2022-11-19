@@ -6,7 +6,9 @@ import 'package:learn_numbers/bloc/state.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 
 class TargetTextWinget extends StatelessWidget {
-  const TargetTextWinget({Key? key}) : super(key: key);
+  const TargetTextWinget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +16,8 @@ class TargetTextWinget extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         if (state.buttomPressed && state.buttonChoise == state.truePosition) {
-          Future.delayed(const Duration(milliseconds: 1100), () {
-            developer.log('Function - updateScreenData');
+          Future.delayed(const Duration(milliseconds: 800), () {
+            developer.log('Target text widget: - updateScreenData');
             context.read<AppBlocBloc>().add(UpdateScreenEvent());
           });
         }

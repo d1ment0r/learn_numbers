@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:developer' as developer;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -14,26 +14,26 @@ class SwitchSoundWidget extends StatefulWidget {
   State<SwitchSoundWidget> createState() => _SwitchSoundWidgetState();
 }
 
-bool soundOn = true;
-
 class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
   @override
   Widget build(BuildContext context) {
+    // Full screen width
+    double width = MediaQuery.of(context).size.width;
+    double leftPaddingValue = width / 6;
+
     return Flexible(
       child: BlocConsumer<AppBlocBloc, AppState>(
         listener: (context, state) {},
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 5.0, right: 20.0),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    soundOn = !soundOn;
-                    developer.log('Sound : $soundOn');
-                  });
-                },
+          return Align(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () {
+                globals.soundOn = !globals.soundOn;
+                context.read<AppBlocBloc>().add(ChangeSoundStateEvent());
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: leftPaddingValue),
                 child: Container(
                   width: 85.0,
                   height: 40.0,
@@ -47,12 +47,12 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                         height: 40,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Color(0xffecf0f3),
-                              Color(0xffecf0f3),
+                              Colors.grey.shade100,
+                              Colors.grey.shade100,
                             ],
                           ),
                           boxShadow: const [
@@ -76,18 +76,18 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         margin: EdgeInsets.only(
-                            left: soundOn ? 51.0 : 8.0, top: 6.0),
+                            left: globals.soundOn ? 51.0 : 8.0, top: 6.0),
                         width: 30,
                         height: 30,
                         decoration: BoxDecoration(
-                          color: const Color(0xffecf0f3),
+                          color: Colors.grey[100],
                           borderRadius: BorderRadius.circular(24),
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Color(0xffecf0f3),
-                              Color(0xffecf0f3),
+                              Colors.grey.shade100,
+                              Colors.grey.shade100,
                             ],
                           ),
                           boxShadow: const [
@@ -110,9 +110,9 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                         width: 20,
                         height: 20,
                         margin: EdgeInsets.only(
-                            left: soundOn ? 53.0 : 10.0, top: 10.0),
+                            left: globals.soundOn ? 53.0 : 10.0, top: 10.0),
                         duration: const Duration(milliseconds: 200),
-                        child: soundOn
+                        child: globals.soundOn
                             ? SvgPicture.asset(
                                 'assets/images/sound_on.svg',
                                 color: Colors.black,
