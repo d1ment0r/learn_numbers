@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learn_numbers/screens/choise_screen.dart';
+import 'dart:developer' as developer;
 
 import 'one_screen.dart';
 import 'two_screen.dart';
@@ -41,7 +43,6 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(widget.title),
-        // backgroundColor: const Color(0xFF3399CC),
         backgroundColor: const Color(0xFF3399CC),
         actions: <Widget>[
           IconButton(
@@ -50,7 +51,11 @@ class _MainScreenState extends State<MainScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              //
+              developer.log('Main screen - push to choise screen');
+              Route route = MaterialPageRoute(
+                  builder: (context) =>
+                      const ChoiseLanguageScreen(firstInit: false));
+              Navigator.push(context, route);
             },
           )
         ],

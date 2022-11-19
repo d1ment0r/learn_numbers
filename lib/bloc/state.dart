@@ -166,7 +166,8 @@ Future<void> speak(sayText) async {
       globals.languageCode = globals.defaultLanguageCode;
     }
   }
-  globals.language = await tts.getDisplayLanguageByCode(globals.languageCode!);
+  final String? language =
+      await tts.getDisplayLanguageByCode(globals.languageCode!);
 
   tts.setVolume(globals.volume);
   tts.setRate(globals.rate);

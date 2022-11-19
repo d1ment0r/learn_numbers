@@ -19,9 +19,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const ChoiseLanguageScreen(),
+      home: const ChoiseLanguageScreen(
+        firstInit: true,
+      ),
       routes: <String, WidgetBuilder>{
-        '/choise': (BuildContext context) => const ChoiseLanguageScreen(),
+        '/choise': (BuildContext context) => const ChoiseLanguageScreen(
+              firstInit: true,
+            ),
         '/main': (BuildContext context) => const MainScreen(title: 'Turkish'),
       },
     );
