@@ -1,5 +1,7 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -7,9 +9,12 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:learn_numbers/db/database.dart';
 import 'package:learn_numbers/models/language.dart';
+import 'package:number_to_words/number_to_words.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:text_to_speech/text_to_speech.dart';
+import 'package:translator/translator.dart';
 
 import 'main_screen.dart';
 
@@ -24,8 +29,10 @@ class ChoiseLanguageScreen extends StatefulWidget {
 }
 
 class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
-  // int _progress = 0;
+  double progress = 0;
   bool _isElevated = false;
+  bool _i_am_creater = false;
+  bool _press_button_creater = false;
 
   // Map embeded languages
   Language _currentLanguage = Language(
@@ -132,7 +139,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       Future.delayed(const Duration(milliseconds: 150), () {
         _isElevated = false;
       });
-      //
     }
     return Scaffold(
       appBar: AppBar(
@@ -144,138 +150,222 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
         padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 10.0),
         child: Column(
           children: [
-            Container(
-              width: 600,
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.grey.shade100,
-                      Colors.grey.shade100,
-                    ],
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xffccd0d3),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(4, 4),
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(-4, -4),
-                    ),
-                  ]),
-              child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton(
-                      hint: const Text('Choise language'),
-                      items: dropdownMenuItems,
-                      value: _selectedLanguage.id,
-                      onChanged: ((value) {
-                        onChangeDropdownItem(value);
-                      }),
-                    )),
-              ),
-            ),
+            choiseLanguageWidget(),
             rowVolumeWidget(),
             rowRateWidget(),
             rowPitchWidget(),
-            const SizedBox(
-              height: 150.0,
-            ),
             Expanded(
               child: Align(
                   alignment: Alignment.center,
-                  child: GestureDetector(
-                    onTap: () async {
-                      await DBProvider.db.updateSettins(_selectedLanguage);
-                      setState(() {
-                        _languageChange = _currentLanguage != _selectedLanguage;
-                        _isElevated = !_isElevated;
-                      });
-                      initializationApp();
-                    },
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(microseconds: 200),
-                          height: 60.0,
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.grey.shade100,
-                                Colors.grey.shade100,
-                              ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      !_i_am_creater
+                          ? GestureDetector(
+                              onTap: () async {
+                                await DBProvider.db
+                                    .updateSettins(_selectedLanguage);
+                                setState(() {
+                                  _languageChange =
+                                      _currentLanguage != _selectedLanguage;
+                                  _isElevated = !_isElevated;
+                                });
+                                await Future.delayed(
+                                    const Duration(milliseconds: 200));
+                                initializationApp();
+                              },
+                              child: Stack(
+                                alignment: AlignmentDirectional.center,
+                                children: [
+                                  AnimatedContainer(
+                                    duration: const Duration(microseconds: 200),
+                                    height: 60.0,
+                                    width: 60.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Colors.grey.shade100,
+                                          Colors.grey.shade100,
+                                        ],
+                                      ),
+                                      boxShadow: !_isElevated
+                                          ? [
+                                              const BoxShadow(
+                                                color: Color(0xffccd0d3),
+                                                spreadRadius: 2,
+                                                blurRadius: 5,
+                                                offset: Offset(4, 4),
+                                              ),
+                                              const BoxShadow(
+                                                color: Colors.white,
+                                                spreadRadius: 1,
+                                                blurRadius: 5,
+                                                offset: Offset(-4, -4),
+                                              ),
+                                            ]
+                                          : [
+                                              const BoxShadow(
+                                                color: Color(0xffffffff),
+                                                offset: Offset(-4, -4),
+                                                blurRadius: 5,
+                                                spreadRadius: 1,
+                                                inset: true,
+                                              ),
+                                              const BoxShadow(
+                                                color: Color(0xffccd0d3),
+                                                offset: Offset(4, 4),
+                                                blurRadius: 5,
+                                                spreadRadius: 1,
+                                                inset: true,
+                                              ),
+                                            ],
+                                    ),
+                                  ),
+                                  SvgPicture.asset('assets/images/ok_bold.svg',
+                                      width: 40,
+                                      height: 40,
+                                      color: Colors.green),
+                                ],
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () async {
+                                setState(() {
+                                  _press_button_creater =
+                                      !_press_button_creater;
+                                });
+                                createJsonFile();
+                              },
+                              // Кнопка, только для меня
+                              child: Stack(
+                                alignment: AlignmentDirectional.center,
+                                children: [
+                                  if (progress == 0)
+                                    AnimatedContainer(
+                                      duration:
+                                          const Duration(microseconds: 200),
+                                      height: 100.0,
+                                      width: 100.0,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Colors.grey.shade100,
+                                            Colors.grey.shade100,
+                                          ],
+                                        ),
+                                        boxShadow: !_press_button_creater
+                                            ? [
+                                                const BoxShadow(
+                                                  color: Color(0xffccd0d3),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 5,
+                                                  offset: Offset(4, 4),
+                                                ),
+                                                const BoxShadow(
+                                                  color: Colors.white,
+                                                  spreadRadius: 1,
+                                                  blurRadius: 5,
+                                                  offset: Offset(-4, -4),
+                                                ),
+                                              ]
+                                            : [
+                                                const BoxShadow(
+                                                  color: Color(0xffffffff),
+                                                  offset: Offset(-4, -4),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                  inset: true,
+                                                ),
+                                                const BoxShadow(
+                                                  color: Color(0xffccd0d3),
+                                                  offset: Offset(4, 4),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                  inset: true,
+                                                ),
+                                              ],
+                                      ),
+                                    ),
+                                  if (progress == 0)
+                                    SvgPicture.asset(
+                                      'assets/images/json.svg',
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                  if (progress > 0)
+                                    CircularPercentIndicator(
+                                      radius: 100.0,
+                                      lineWidth: 18.0,
+                                      percent: progress,
+                                      backgroundColor: Colors.grey.shade300,
+                                      animation: false,
+                                      animationDuration: 500,
+                                      center: Text(
+                                        '${(progress * 100) ~/ 1} %',
+                                        style: const TextStyle(fontSize: 25.0),
+                                      ),
+                                      progressColor: const Color(0xFF3399CC),
+                                    ),
+                                ],
+                              ),
                             ),
-                            boxShadow: !_isElevated
-                                ? [
-                                    const BoxShadow(
-                                      color: Color(0xffccd0d3),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: Offset(4, 4),
-                                    ),
-                                    const BoxShadow(
-                                      color: Colors.white,
-                                      spreadRadius: 1,
-                                      blurRadius: 5,
-                                      offset: Offset(-4, -4),
-                                    ),
-                                  ]
-                                : [
-                                    const BoxShadow(
-                                      color: Color(0xffffffff),
-                                      offset: Offset(-4, -4),
-                                      blurRadius: 5,
-                                      spreadRadius: 1,
-                                      inset: true,
-                                    ),
-                                    const BoxShadow(
-                                      color: Color(0xffccd0d3),
-                                      offset: Offset(4, 4),
-                                      blurRadius: 5,
-                                      spreadRadius: 1,
-                                      inset: true,
-                                    ),
-                                  ],
-                          ),
-                        ),
-                        SvgPicture.asset('assets/images/ok_bold.svg',
-                            width: 40, height: 40, color: Colors.green),
-                      ],
-                    ),
-                  )
-                  // : CircularPercentIndicator(
-                  //     radius: 60.0,
-                  //     lineWidth: 15.0,
-                  //     percent: _progress % 1,
-                  //     animation: false,
-                  //     animationDuration: 1500,
-                  //     center: Text(
-                  //       '${_progress % 1} %',
-                  //       style: const TextStyle(fontSize: 20.0),
-                  //     ),
-                  //     progressColor: Colors.amber[900],
-                  //   ),
-                  ),
+                    ],
+                  )),
             ),
             const SizedBox(
               height: 50,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Container choiseLanguageWidget() {
+    return Container(
+      width: 600,
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.grey.shade100,
+              Colors.grey.shade100,
+            ],
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0xffccd0d3),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(4, 4),
+            ),
+            BoxShadow(
+              color: Colors.white,
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(-4, -4),
+            ),
+          ]),
+      child: DropdownButtonHideUnderline(
+        child: ButtonTheme(
+            alignedDropdown: true,
+            child: DropdownButton(
+              hint: const Text('Choise language'),
+              items: dropdownMenuItems,
+              value: _selectedLanguage.id,
+              onChanged: ((value) {
+                onChangeDropdownItem(value);
+              }),
+            )),
       ),
     );
   }
@@ -350,14 +440,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     );
   }
 
-  Future<String?> getVoiceByLang(String lang) async {
-    final List<String>? voices = await tts.getVoiceByLang(lang);
-    if (voices != null && voices.isNotEmpty) {
-      return voices.first;
-    }
-    return null;
-  }
-
   onChangeDropdownItem(int id) {
     setState(() {
       _selectedLanguage = languages[id];
@@ -368,16 +450,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       _selectedLanguage.pitch = _currentLanguage.pitch;
     });
   }
-
-  // void findLanguageUsingLoop(List languages, String languageCode) {
-  //   for (var i = 0; i < languages.length; i++) {
-  //     if (languages[i]['languageCode'] == languageCode) {
-  //       _selectedName = languages[i]['name'];
-  //       _selectedLanguage = i.toString();
-  //       return;
-  //     }
-  //   }
-  // }
 
   List<DropdownMenuItem> buildDropdownMenuItems() {
     List<DropdownMenuItem> items = [];
@@ -405,6 +477,48 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       );
     }
     return items;
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    developer.log('$path/${_selectedLanguage.languageCode}.json');
+    return File('$path/${_selectedLanguage.languageCode}.json');
+  }
+
+  Future<void> createJsonFile() async {
+    final translator = GoogleTranslator();
+    // HashMap numericJSON = HashMap<String, dynamic>();
+    SplayTreeMap sortingMap = SplayTreeMap<String, String>();
+    globals.sortingMap.clear();
+    for (int id = 0; id < 1000; id++) {
+      // Этап первый - число в английский
+      String english = id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
+      // Этап второй - английский в выбранный язык
+      String languageCode = _selectedLanguage.languageCode.substring(0, 2);
+      await translator.translate(english, to: languageCode).then((result) {
+        String trueResult = result.toString().toLowerCase();
+        // numericJSON.putIfAbsent(id.toString(), () => trueResult);
+        sortingMap.putIfAbsent(id.toString(), () => trueResult);
+        // Показываем прогресс бар
+        // if (id % 100 == 0) {
+        setState(() {
+          progress = id / 1000;
+        });
+        // }
+      });
+    }
+    setState(() {
+      progress = 0;
+      _press_button_creater = false;
+    });
+    final _filePath = await _localFile;
+
+    _filePath.writeAsString(jsonEncode(sortingMap));
   }
 
   @override

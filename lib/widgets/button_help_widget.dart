@@ -30,7 +30,7 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
     // Full screen width
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    // developer.log('width screen: $width height: $height');
+    developer.log('width screen: $width height: $height');
     double rigthPaddingValue = width / 18;
 
     return Flexible(

@@ -22,7 +22,7 @@ class TargetTextWinget extends StatelessWidget {
           });
         }
         return SizedBox(
-          height: 160,
+          height: 140,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -34,17 +34,15 @@ class TargetTextWinget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: state.page == 1
                       ? state.buttonReverse
-                          ? state.buttonReverse
-                              ? 150.0
-                              : 100.0
-                          : 100.0
+                          ? 110.0 // число первый экран
+                          : 65.0 // слово первый экран
                       : state.page == 2
                           ? state.buttonReverse
-                              ? 145.0
-                              : 70.0
+                              ? 120.0 // число второй экран
+                              : 55.0 // слово второй экран
                           : state.buttonReverse
-                              ? 140.0
-                              : 55.0,
+                              ? 120.0 // число третий экран
+                              : 40.0, // слово третий экран
                 ),
               ),
             ),
