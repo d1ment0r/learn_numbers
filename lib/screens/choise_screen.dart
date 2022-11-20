@@ -337,7 +337,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                           ),
                         ),
                         SvgPicture.asset(
-                          'assets/images/ok.svg',
+                          'assets/images/ok_bold.svg',
                           width: 40,
                           height: 40,
                           color: _languageCode != null
