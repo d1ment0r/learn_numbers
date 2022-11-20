@@ -3,15 +3,12 @@ import 'dart:developer' as developer;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:learn_numbers/db/database.dart';
 import 'package:learn_numbers/models/language.dart';
-// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
 import 'main_screen.dart';
@@ -203,15 +200,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                         _languageChange = _currentLanguage != _selectedLanguage;
                         _isElevated = !_isElevated;
                       });
-                      // Obtain shared preferences.
                       initializationApp();
-                      // Navigator.of(context).pushAndRemoveUntil(
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const MainScreen(
-                      //               title: 'Turkish',
-                      //             )),
-                      //     (Route route) => false);
-                      // ignore: use_build_context_synchronously
                     },
                     child: Stack(
                       alignment: AlignmentDirectional.center,
