@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 import 'dart:math';
 import 'package:learn_numbers/models/globals.dart' as globals;
+import 'package:learn_numbers/models/language.dart';
 
 import 'package:number_to_words/number_to_words.dart';
 import 'package:text_to_speech/text_to_speech.dart';
@@ -140,6 +141,7 @@ String getTranslateTarget(int target) {
 Future<void> speak(sayText) async {
   List<String> languages = <String>[];
   List<String> languageCodes = <String>[];
+  Language? language = globals.currentLanguage;
 
   // populate lang code (i.e. en-US)
   languageCodes = await tts.getLanguages();
@@ -157,26 +159,24 @@ Future<void> speak(sayText) async {
 
   final String? defaultLangCode = await tts.getDefaultLanguage();
 
-  if (globals.languageCode != null &&
-      !languageCodes.contains(globals.languageCode)) {
-    if (globals.languageCode != null &&
+  if (language!.languageCode != '' &&
+      !languageCodes.contains(language.languageCode)) {
+    if (language.languageCode != '' &&
         languageCodes.contains(defaultLangCode)) {
       globals.languageCode = defaultLangCode;
-    } else {
-      globals.languageCode = globals.defaultLanguageCode;
     }
   }
-  final String? language =
-      await tts.getDisplayLanguageByCode(globals.languageCode!);
+  // final String? language =
+  //     await tts.getDisplayLanguageByCode(language.languageCode);
 
-  tts.setVolume(globals.volume);
-  tts.setRate(globals.rate);
-  if (globals.languageCode != null) {
-    tts.setLanguage(globals.languageCode!);
-    developer.log('Language set:  ${globals.languageCode}');
+  tts.setVolume(language.volume);
+  tts.setRate(language.rate);
+  if (language.languageCode != '') {
+    tts.setLanguage(language.languageCode);
+    developer.log('Language set:  ${language.languageCode}');
   } else {
-    tts.setLanguage(globals.defaultLanguageCode);
-    developer.log('Language set: ${globals.defaultLanguageCode}');
+    tts.setLanguage(defaultLangCode!);
+    developer.log('Language set: $defaultLangCode');
   }
   tts.setPitch(globals.pitch);
   await Future.delayed(const Duration(milliseconds: 500));

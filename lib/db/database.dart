@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 import 'dart:io';
 
-import 'package:learn_numbers/models/translate.dart';
+import 'package:learn_numbers/models/language.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -10,7 +10,7 @@ class DBProvider {
   static final DBProvider db = DBProvider._();
   static late Database _database;
 
-  String currentLanguageTable = 'tr';
+  String titleTable = 'current';
 
   Future<Database> get database async {
     _database = await _initDB();
@@ -19,107 +19,50 @@ class DBProvider {
 
   Future<Database> _initDB() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = '${dir.path}/translate.db';
+    String path = '${dir.path}/language.db';
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   void _createDB(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE $currentLanguageTable(id INTEGER PRIMARY KEY, result TEXT)',
+      'CREATE TABLE $titleTable(id INTEGER PRIMARY KEY, name TEXT, image TEXT, languageCode TEXT, reversMap INTEGER, soundOn INTEGER, volume REAL, rate REAL, pitch REAL)',
     );
   }
 
-  // READ ALL Translate
-  Future<List<Translate>> getTranslates() async {
+  // READ settings
+  Future<Language> getSettings() async {
     Database db = await database;
-    final List<Map<String, dynamic>> translatesMapList =
-        await db.query(currentLanguageTable);
-    final List<Translate> translatesList = [];
-    for (var translateMap in translatesMapList) {
-      translatesList.add(Translate.fromMap(translateMap));
+    final List<Map<String, dynamic>> languagesMapList =
+        await db.query(titleTable);
+    final List<Language> languagesList = [];
+    for (var languageMap in languagesMapList) {
+      languagesList.add(Language.fromMap(languageMap));
     }
-    developer.log('Read translate list ${translatesList.length}');
-    return translatesList;
-  }
-
-// READ ONE Translate
-  Future<Translate> getTranslateByID(int id) async {
-    Database db = await database;
-    final List<Map<String, dynamic>> translatesMapList = await db.query(
-      currentLanguageTable,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-    if (translatesMapList.isEmpty) {
-      developer.log('DB[54] Translate with ID $id not found');
-      return Translate(id, '');
+    developer
+        .log('DB: (getSettings) read settings list ${languagesList.length}');
+    if (languagesList.isEmpty) {
+      return Language(
+          id: 0,
+          name: '',
+          image: '',
+          languageCode: '',
+          reversMap: true,
+          soundOn: false,
+          volume: 0,
+          rate: 0,
+          pitch: 0);
     } else {
-      final List<Translate> translatesList = [];
-      for (var translateMap in translatesMapList) {
-        translatesList.add(Translate.fromMap(translateMap));
-      }
-      // developer.log('DB[61] Read translate by ID $id success');
-      return translatesList[0];
+      return languagesList.first;
     }
   }
 
-// READ SUM record Translate
-  Future<int> getSumTranslates() async {
+  // UPDATE settings
+  Future<Language> updateSettins(Language language) async {
     Database db = await database;
-    final List<Map<String, dynamic>> translatesMapList =
-        await db.query(currentLanguageTable);
-    if (translatesMapList.isEmpty) {
-      developer.log('DB[72]: Translate list is empty');
-      return 0;
-    } else {
-      developer.log('DB[75]: ${translatesMapList.length} records in database');
-      return translatesMapList.length;
-    }
-  }
-
-  // INSERT ONE translate
-  Future<Translate> insertTranslate(Translate translate) async {
-    Database db = await database;
-    final List<Map<String, dynamic>> translatesMapList = await db.query(
-      currentLanguageTable,
-      where: 'id = ?',
-      whereArgs: [translate.id],
-    );
-    if (translatesMapList.isEmpty) {
-      // translator.translate(translate.result, to: 'tr').then((result) async {
-
-      //           translate.result = result.toString().toLowerCase();
-      translate.id = await db.insert(currentLanguageTable, translate.toMap());
-      developer.log('DB[93] insert - translate '
-          '${translate.id}'
-          ' not found, translate save  text: ${translate.result}');
-    } else {
-      developer.log('DB[97] insert - translate '
-          '${translate.id}'
-          ' found, translate update text: ${translate.result}');
-      updateTranslate(translate);
-    }
-    return translate;
-  }
-
-  // UPDATE ONE
-  Future<int> updateTranslate(Translate translate) async {
-    Database db = await database;
-    return await db.update(
-      currentLanguageTable,
-      translate.toMap(),
-      where: 'id = ?',
-      whereArgs: [translate.id],
-    );
-  }
-
-  // DELETE ONE
-  Future<int> deleteTranslate(int? id) async {
-    Database db = await database;
-    return await db.delete(
-      currentLanguageTable,
-      where: '$id = ?',
-      whereArgs: [id],
-    );
+    final int resultDelete = await db.delete(titleTable);
+    final int resultInsert = await db.insert(titleTable, language.toMap());
+    developer
+        .log('DB: (updateSettins) delete: $resultDelete insert: $resultInsert');
+    return language;
   }
 }
