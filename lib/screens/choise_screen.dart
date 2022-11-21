@@ -31,8 +31,8 @@ class ChoiseLanguageScreen extends StatefulWidget {
 class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   double progress = 0;
   bool _isElevated = false;
-  bool _i_am_creater = false;
-  bool _press_button_creater = false;
+  final _iAmCreater = true;
+  bool _pressButtonCreater = false;
 
   // Map embeded languages
   Language _currentLanguage = Language(
@@ -160,7 +160,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      !_i_am_creater
+                      !_iAmCreater
                           ? GestureDetector(
                               onTap: () async {
                                 await DBProvider.db
@@ -234,8 +234,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                           : GestureDetector(
                               onTap: () async {
                                 setState(() {
-                                  _press_button_creater =
-                                      !_press_button_creater;
+                                  _pressButtonCreater = !_pressButtonCreater;
                                 });
                                 createJsonFile();
                               },
@@ -259,7 +258,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                                             Colors.grey.shade100,
                                           ],
                                         ),
-                                        boxShadow: !_press_button_creater
+                                        boxShadow: !_pressButtonCreater
                                             ? [
                                                 const BoxShadow(
                                                   color: Color(0xffccd0d3),
@@ -514,11 +513,11 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     }
     setState(() {
       progress = 0;
-      _press_button_creater = false;
+      _pressButtonCreater = false;
     });
-    final _filePath = await _localFile;
+    final filePath = await _localFile;
 
-    _filePath.writeAsString(jsonEncode(sortingMap));
+    filePath.writeAsString(jsonEncode(sortingMap));
   }
 
   @override
