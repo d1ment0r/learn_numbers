@@ -24,6 +24,11 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double resize = 1;
+    double height = MediaQuery.of(context).size.height;
+    if (height < 600) {
+      resize = 0.7;
+    }
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -46,7 +51,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
             child: AnimatedContainer(
               duration: const Duration(microseconds: 200),
               margin: const EdgeInsets.only(top: 20, left: 40.0, right: 40.0),
-              height: 48,
+              height: 48 * resize,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
@@ -104,15 +109,15 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                               : Colors.black,
                       fontSize: state.page == 1
                           ? !state.buttonReverse
-                              ? 30.0
-                              : 28.0
+                              ? 30.0 * resize
+                              : 28.0 * resize
                           : state.page == 2
                               ? !state.buttonReverse
-                                  ? 30.0
-                                  : 25.0
+                                  ? 30.0 * resize
+                                  : 25.0 * resize
                               : !state.buttonReverse
-                                  ? 30.0
-                                  : 23.0,
+                                  ? 30.0 * resize
+                                  : 23.0 * resize,
                       fontWeight: state.buttonReverse
                           ? FontWeight.w500
                           : FontWeight.w700),

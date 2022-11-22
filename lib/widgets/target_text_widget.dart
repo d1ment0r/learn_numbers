@@ -12,6 +12,11 @@ class TargetTextWinget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double resize = 1;
+    double height = MediaQuery.of(context).size.height;
+    if (height < 600) {
+      resize = 0.65;
+    }
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -22,7 +27,7 @@ class TargetTextWinget extends StatelessWidget {
           });
         }
         return SizedBox(
-          height: 140,
+          height: 140 * resize,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -34,15 +39,15 @@ class TargetTextWinget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: state.page == 1
                       ? state.buttonReverse
-                          ? 110.0 // число первый экран
-                          : 65.0 // слово первый экран
+                          ? 110.0 * resize // число первый экран
+                          : 65.0 * resize // слово первый экран
                       : state.page == 2
                           ? state.buttonReverse
-                              ? 120.0 // число второй экран
-                              : 55.0 // слово второй экран
+                              ? 120.0 * resize // число второй экран
+                              : 55.0 * resize // слово второй экран
                           : state.buttonReverse
-                              ? 120.0 // число третий экран
-                              : 40.0, // слово третий экран
+                              ? 120.0 * resize // число третий экран
+                              : 40.0 * resize, // слово третий экран
                 ),
               ),
             ),

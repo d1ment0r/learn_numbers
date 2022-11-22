@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +17,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:translator/translator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'main_screen.dart';
 
@@ -29,10 +32,13 @@ class ChoiseLanguageScreen extends StatefulWidget {
 }
 
 class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
+  // Special for me
   double progress = 0;
   bool _isElevated = false;
-  final _iAmCreater = true;
+  final _iAmCreater = false;
+  final _createJsonFile = false;
   bool _pressButtonCreater = false;
+  final Uri toMySite = Uri(scheme: 'https', host: 'www.dmitrii.online');
 
   // Map embeded languages
   Language _currentLanguage = Language(
@@ -236,7 +242,11 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                                 setState(() {
                                   _pressButtonCreater = !_pressButtonCreater;
                                 });
-                                createJsonFile();
+                                if (_createJsonFile) {
+                                  createJsonFile();
+                                } else {
+                                  createTxtFile();
+                                }
                               },
                               // Кнопка, только для меня
                               child: Stack(
@@ -292,11 +302,17 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                                       ),
                                     ),
                                   if (progress == 0)
-                                    SvgPicture.asset(
-                                      'assets/images/json.svg',
-                                      width: 60,
-                                      height: 60,
-                                    ),
+                                    _createJsonFile
+                                        ? SvgPicture.asset(
+                                            'assets/images/json.svg',
+                                            width: 60,
+                                            height: 60,
+                                          )
+                                        : SvgPicture.asset(
+                                            'assets/images/txt.svg',
+                                            width: 60,
+                                            height: 60,
+                                          ),
                                   if (progress > 0)
                                     CircularPercentIndicator(
                                       radius: 100.0,
@@ -317,8 +333,28 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                     ],
                   )),
             ),
-            const SizedBox(
-              height: 50,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25.0),
+              child: GestureDetector(
+                onTap: () {
+                  _launchUrl();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.copyright,
+                      size: 14.0,
+                      color: Colors.blue.shade800,
+                    ),
+                    Text(
+                      '  dmitrii.online',
+                      style: TextStyle(
+                          fontSize: 16.0, color: Colors.blue.shade800),
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -483,10 +519,43 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     return directory.path;
   }
 
-  Future<File> get _localFile async {
+  Future<File> get _localFileJson async {
     final path = await _localPath;
     developer.log('$path/${_selectedLanguage.languageCode}.json');
-    return File('$path/${_selectedLanguage.languageCode}.json');
+    return File('$path/json/${_selectedLanguage.languageCode}.json');
+  }
+
+  Future<File> get _localFileTxt async {
+    final path = await _localPath;
+    developer.log('$path/${_selectedLanguage.languageCode}.txt');
+    return File('$path/${_selectedLanguage.languageCode}.txt');
+  }
+
+  Future<void> createTxtFile() async {
+    final filePath = await _localFileTxt;
+    String string = '';
+    var jsonText = await rootBundle
+        .loadString('assets/json/${_selectedLanguage.languageCode}.json');
+    Map<String, dynamic> data = json.decode(jsonText);
+    // очищаем языковую карту, на случай если из настроек сменили язык
+    globals.sortingMap.clear();
+    // заполняем карту переводом
+    data.forEach((key, value) {
+      globals.sortingMap.putIfAbsent(int.parse(key), () => value.toString());
+    });
+    for (int i = 0; i < 1000; i++) {
+      string =
+          '$string${i.toString().padLeft(3, ' ')} ${globals.sortingMap[i].toString()}\n';
+      setState(() {
+        progress = i / 1000;
+      });
+    }
+
+    filePath.writeAsString(string);
+    setState(() {
+      progress = 0;
+      _pressButtonCreater = false;
+    });
   }
 
   Future<void> createJsonFile() async {
@@ -515,7 +584,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       progress = 0;
       _pressButtonCreater = false;
     });
-    final filePath = await _localFile;
+    final filePath = await _localFileJson;
 
     filePath.writeAsString(jsonEncode(sortingMap));
   }
@@ -523,5 +592,19 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(toMySite)) {
+      throw 'Could not launch';
+    }
+  }
+
+  Future<void> _onOpen(LinkableElement link) async {
+    if (await canLaunch(link.url)) {
+      await launch(link.url);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 }

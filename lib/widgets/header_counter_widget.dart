@@ -79,10 +79,10 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                   children: [
                     AnimatedContainer(
                       duration: const Duration(microseconds: 200),
-                      height: 30.0,
-                      width: 30.0,
+                      height: 40.0,
+                      width: 40.0,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(20),
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,

@@ -241,17 +241,6 @@ class Language extends Equatable {
       ),
       Language(
         id: 17,
-        name: 'Lithuanian',
-        image: 'assets/images/flags/lt.png',
-        languageCode: 'lt-LT',
-        reversMap: false,
-        soundOn: true,
-        volume: 1,
-        rate: 1,
-        pitch: 1,
-      ),
-      Language(
-        id: 18,
         name: 'Romanian',
         image: 'assets/images/flags/ro.png',
         languageCode: 'ro-RO',

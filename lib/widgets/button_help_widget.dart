@@ -53,10 +53,10 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
                   children: [
                     AnimatedContainer(
                       duration: const Duration(microseconds: 200),
-                      height: 40.0,
-                      width: 40.0,
+                      height: 60.0,
+                      width: 60.0,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(30),
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -100,8 +100,8 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
                     ),
                     SvgPicture.asset(
                       'assets/images/help_ok.svg',
-                      width: 22,
-                      height: 22,
+                      width: 25,
+                      height: 25,
                     ),
                   ],
                 ),

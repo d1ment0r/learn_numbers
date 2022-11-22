@@ -53,6 +53,8 @@ dependencies:
   text_to_speech: ^0.2.3
   lite_rolling_switch: ^1.0.0
   flutter_svg: ^1.1.6
+  flutter_linkify: ^5.0.2
+  url_launcher: ^6.1.7
   
 
 dev_dependencies:
