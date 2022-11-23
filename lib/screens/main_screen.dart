@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/svg.dart';
 import 'package:learn_numbers/screens/choise_screen.dart';
 import 'package:learn_numbers/screens/learning_screen.dart';
 import 'dart:developer' as developer;
@@ -27,12 +28,51 @@ class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController(initialPage: 0);
 
   final pages = [
-    const LearningScreen(),
     const OneScreen(),
     const TenScreen(),
     const HundredScreen(),
+    const LearningScreen(),
   ];
   final _bottomNavigationBarItems = [
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/number-1.svg',
+          width: 32,
+          height: 32,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/number-1.svg',
+          width: 25,
+          height: 25,
+        ),
+        label: ''),
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/number-10.svg',
+          width: 32,
+          height: 32,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/number-10.svg',
+          width: 25,
+          height: 25,
+        ),
+        label: ''),
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/number-100.svg',
+          width: 32,
+          height: 32,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/number-100.svg',
+          width: 28,
+          height: 28,
+        ),
+        label: ''),
     BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
           'assets/icon/graduate-student-svgrepo-com.svg',
@@ -44,45 +84,6 @@ class _MainScreenState extends State<MainScreen> {
           'assets/icon/graduate-student-svgrepo-com.svg',
           width: 22,
           height: 22,
-        ),
-        label: ''),
-    BottomNavigationBarItem(
-        activeIcon: SvgPicture.asset(
-          'assets/icon/number-1.svg',
-          width: 32,
-          height: 32,
-          color: const Color(0xFF3399CC),
-        ),
-        icon: SvgPicture.asset(
-          'assets/icon/number-1.svg',
-          width: 25,
-          height: 25,
-        ),
-        label: ''),
-    BottomNavigationBarItem(
-        activeIcon: SvgPicture.asset(
-          'assets/icon/number-10.svg',
-          width: 32,
-          height: 32,
-          color: const Color(0xFF3399CC),
-        ),
-        icon: SvgPicture.asset(
-          'assets/icon/number-10.svg',
-          width: 25,
-          height: 25,
-        ),
-        label: ''),
-    BottomNavigationBarItem(
-        activeIcon: SvgPicture.asset(
-          'assets/icon/number-100.svg',
-          width: 32,
-          height: 32,
-          color: const Color(0xFF3399CC),
-        ),
-        icon: SvgPicture.asset(
-          'assets/icon/number-100.svg',
-          width: 28,
-          height: 28,
         ),
         label: ''),
   ];
