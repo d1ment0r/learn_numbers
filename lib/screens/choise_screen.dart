@@ -5,7 +5,6 @@ import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -107,6 +106,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       });
       // если языковая карта заполнена, возвращаемся на главный экран
       if (globals.sortingMap.isNotEmpty) {
+        // это запуск приложения
         if (widget.firstInit) {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -115,8 +115,9 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                         title: _currentLanguage.name,
                       )),
               (Route route) => false);
-          await Future.delayed(const Duration(milliseconds: 500));
+          await Future.delayed(const Duration(seconds: 1));
           FlutterNativeSplash.remove();
+          // это переход из запущенного приложения
         } else {
           if (_languageChange) {
             // ignore: use_build_context_synchronously
@@ -597,14 +598,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   Future<void> _launchUrl() async {
     if (!await launchUrl(toMySite)) {
       throw 'Could not launch';
-    }
-  }
-
-  Future<void> _onOpen(LinkableElement link) async {
-    if (await canLaunch(link.url)) {
-      await launch(link.url);
-    } else {
-      throw 'Could not launch $link';
     }
   }
 }

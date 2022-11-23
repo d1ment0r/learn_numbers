@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:learn_numbers/models/globals.dart' as globals;
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:audioplayers/audio_cache.dart';
 import 'state.dart';
@@ -10,12 +8,6 @@ part 'event.dart';
 
 class AppBlocBloc extends Bloc<AppEvent, AppState> {
   int page;
-  List<AudioPlayer> players =
-      List.generate(2, (_) => AudioPlayer()..setReleaseMode(ReleaseMode.stop));
-  int selectedPlayerIdx = 0;
-
-  AudioPlayer get selectedPlayer => players[selectedPlayerIdx];
-  List<StreamSubscription> streams = [];
 
   AppBlocBloc({
     required this.page,
@@ -37,11 +29,8 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
       state.buttonChoise = event.choise;
       if (event.choise == state.truePosition) {
         state.good++;
-
-        AudioPlayer(playerId: '/assets/sound/correct.mp3').audioCache;
       } else {
         state.wrong++;
-        AudioPlayer(playerId: '/assets/sound/error-2.mp3').audioCache;
       }
       emit(AppState(
         counter: state.counter,
