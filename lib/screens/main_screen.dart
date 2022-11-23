@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:learn_numbers/screens/choise_screen.dart';
+import 'package:learn_numbers/screens/learning_screen.dart';
 import 'dart:developer' as developer;
 
 import 'one_screen.dart';
@@ -25,14 +27,64 @@ class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController(initialPage: 0);
 
   final pages = [
+    const LearningScreen(),
     const OneScreen(),
     const TenScreen(),
     const HundredScreen(),
   ];
   final _bottomNavigationBarItems = [
-    const BottomNavigationBarItem(icon: Icon(Icons.abc), label: '1'),
-    const BottomNavigationBarItem(icon: Icon(Icons.abc), label: '10'),
-    const BottomNavigationBarItem(icon: Icon(Icons.abc), label: '100'),
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/graduate-student-svgrepo-com.svg',
+          width: 28,
+          height: 28,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/graduate-student-svgrepo-com.svg',
+          width: 22,
+          height: 22,
+        ),
+        label: ''),
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/number-1.svg',
+          width: 32,
+          height: 32,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/number-1.svg',
+          width: 25,
+          height: 25,
+        ),
+        label: ''),
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/number-10.svg',
+          width: 32,
+          height: 32,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/number-10.svg',
+          width: 25,
+          height: 25,
+        ),
+        label: ''),
+    BottomNavigationBarItem(
+        activeIcon: SvgPicture.asset(
+          'assets/icon/number-100.svg',
+          width: 32,
+          height: 32,
+          color: const Color(0xFF3399CC),
+        ),
+        icon: SvgPicture.asset(
+          'assets/icon/number-100.svg',
+          width: 28,
+          height: 28,
+        ),
+        label: ''),
   ];
 
   @override
@@ -69,24 +121,35 @@ class _MainScreenState extends State<MainScreen> {
         },
         children: pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentPage,
-        items: _bottomNavigationBarItems,
-        backgroundColor: colorScheme.surface,
-        selectedItemColor: colorScheme.onSurface,
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 20.0,
+      bottomNavigationBar: Material(
+        // color: Colors.red,
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentPage,
+          items: _bottomNavigationBarItems,
+          backgroundColor: colorScheme.surface,
+          selectedItemColor: colorScheme.onSurface,
+          // selectedItemColor: Colors.amber,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedLabelStyle: const TextStyle(fontSize: 0),
+          unselectedLabelStyle: const TextStyle(fontSize: 0),
+
+          // unselectedLabelStyle: const TextStyle(
+          //   fontWeight: FontWeight.w400,
+          //   fontSize: 20.0,
+          // ),
+          // iconSize: 30,
+          // selectedLabelStyle: const TextStyle(
+          //   fontWeight: FontWeight.bold,
+          //   fontSize: 22.0,
+          // ),
+          onTap: ((value) {
+            _pageController.animateToPage(value,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.ease);
+          }),
         ),
-        iconSize: 0,
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 22.0,
-        ),
-        onTap: ((value) {
-          _pageController.animateToPage(value,
-              duration: const Duration(milliseconds: 400), curve: Curves.ease);
-        }),
       ),
     );
   }
