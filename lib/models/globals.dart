@@ -8,6 +8,7 @@ SplayTreeMap sortingMap = SplayTreeMap<int, String>();
 bool reversMap = false;
 bool soundOn = true;
 bool splashScreenOn = true;
+int currentPage = 1;
 
 // Settings language speech
 String? languageCode;

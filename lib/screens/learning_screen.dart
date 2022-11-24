@@ -111,48 +111,48 @@ class _LearningScreenState extends State<LearningScreen> {
     );
   }
 
-  Padding rowNumbersWidget(int step) {
-    return Padding(
-      padding:
-          const EdgeInsets.only(left: 15.0, top: 7.0, bottom: 7.0, right: 15.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 7.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _arrayNumbers[step].toString().padLeft(3, ' '),
-                      style: const TextStyle(fontSize: 18.0),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+  GestureDetector rowNumbersWidget(int step) {
+    return GestureDetector(
+      onTap: () {
+        developer.log(_arrayNumbers[step].toString());
+        setState(() {
+          _speechButtonOn = true;
+          _currentStep = step;
+        });
+        speak(globals.sortingMap[_arrayNumbers[step]]);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: 15.0, top: 7.0, bottom: 7.0, right: 15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5.0, horizontal: 7.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _arrayNumbers[step].toString().padLeft(3, ' '),
+                        style: const TextStyle(fontSize: 18.0),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  globals.sortingMap[_arrayNumbers[step]],
-                  style: const TextStyle(fontSize: 20.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    globals.sortingMap[_arrayNumbers[step]],
+                    style: const TextStyle(fontSize: 20.0),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: () {
-              developer.log(_arrayNumbers[step].toString());
-              setState(() {
-                _speechButtonOn = true;
-                _currentStep = step;
-              });
-              speak(globals.sortingMap[_arrayNumbers[step]]);
-            },
-            child: AnimatedContainer(
+              ],
+            ),
+            AnimatedContainer(
               duration: const Duration(milliseconds: 500),
               child: SvgPicture.asset(
                 'assets/images/sound_on.svg',
@@ -163,8 +163,8 @@ class _LearningScreenState extends State<LearningScreen> {
                     : Colors.black,
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

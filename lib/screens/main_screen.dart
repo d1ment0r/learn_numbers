@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:learn_numbers/screens/choise_screen.dart';
 import 'package:learn_numbers/screens/learning_screen.dart';
 import 'dart:developer' as developer;
+import 'package:learn_numbers/models/globals.dart' as globals;
 
 import 'one_screen.dart';
 import 'two_screen.dart';
@@ -116,14 +117,15 @@ class _MainScreenState extends State<MainScreen> {
       body: PageView(
         controller: _pageController,
         onPageChanged: (value) {
+          globals.currentPage = value + 1;
           setState(() {
             _currentPage = value;
+            developer.log('PageView: change page to: $value');
           });
         },
         children: pages,
       ),
       bottomNavigationBar: Material(
-        // color: Colors.red,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentPage,
@@ -136,15 +138,6 @@ class _MainScreenState extends State<MainScreen> {
           selectedLabelStyle: const TextStyle(fontSize: 0),
           unselectedLabelStyle: const TextStyle(fontSize: 0),
 
-          // unselectedLabelStyle: const TextStyle(
-          //   fontWeight: FontWeight.w400,
-          //   fontSize: 20.0,
-          // ),
-          // iconSize: 30,
-          // selectedLabelStyle: const TextStyle(
-          //   fontWeight: FontWeight.bold,
-          //   fontSize: 22.0,
-          // ),
           onTap: ((value) {
             _pageController.animateToPage(value,
                 duration: const Duration(milliseconds: 400),

@@ -53,9 +53,12 @@ class AppState {
     required this.truePosition,
     required this.listButton,
   }) {
-    developer.log('State - AppState.speech');
+    developer.log(
+        'State - AppState.speech page: $page currentPage: ${globals.currentPage}');
     if (soundOn) {
-      speak(globals.sortingMap[target]);
+      Future.delayed(const Duration(seconds: 1), () {
+        speak(globals.sortingMap[target], page);
+      });
     }
   }
 
@@ -114,7 +117,9 @@ class AppState {
     this.target = target;
     buttonHelpPressed = false;
     if (globals.soundOn) {
-      speak(globals.sortingMap[target]);
+      Future.delayed(const Duration(seconds: 1), () {
+        speak(globals.sortingMap[target], page);
+      });
     }
     developer.log('State - AppState.update target $target');
   }
@@ -138,7 +143,7 @@ String getTranslateTarget(int target) {
   return target > 0 ? NumberToWord().convert('en-in', target) : 'zero';
 }
 
-Future<void> speak(sayText) async {
+Future<void> speak(sayText, page) async {
   List<String> languages = <String>[];
   List<String> languageCodes = <String>[];
   Language? language = globals.currentLanguage;
@@ -179,6 +184,9 @@ Future<void> speak(sayText) async {
     developer.log('Language set: $defaultLangCode');
   }
   tts.setPitch(globals.pitch);
-  await Future.delayed(const Duration(milliseconds: 500));
-  tts.speak(sayText);
+  // await Future.delayed(const Duration(milliseconds: 500));
+  if (page == globals.currentPage) {
+    tts.speak(sayText);
+  }
+  developer.log('State: speak page: $page currentPage: ${globals.currentPage}');
 }
