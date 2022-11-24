@@ -56,7 +56,7 @@ class AppState {
     developer.log(
         'State - AppState.speech page: $page currentPage: ${globals.currentPage}');
     if (soundOn) {
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         speak(globals.sortingMap[target], page);
       });
     }
