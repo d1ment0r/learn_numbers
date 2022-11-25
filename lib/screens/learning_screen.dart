@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -242,7 +240,7 @@ class _LearningScreenState extends State<LearningScreen> {
               padding: const EdgeInsets.only(right: 10),
               duration: const Duration(milliseconds: 500),
               child: SvgPicture.asset(
-                'assets/images/sound_on.svg',
+                'assets/icon/sound_on.svg',
                 width: 20,
                 height: 20,
                 color: _speechButtonOn && step == _currentStep

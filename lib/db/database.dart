@@ -11,6 +11,7 @@ class DBProvider {
   static late Database _database;
 
   String titleTable = 'current';
+  int version = 2;
 
   Future<Database> get database async {
     _database = await _initDB();
@@ -20,12 +21,12 @@ class DBProvider {
   Future<Database> _initDB() async {
     Directory dir = await getApplicationDocumentsDirectory();
     String path = '${dir.path}/language.db';
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: version, onCreate: _createDB);
   }
 
   void _createDB(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE $titleTable(id INTEGER PRIMARY KEY, name TEXT, image TEXT, languageCode TEXT, reversMap INTEGER, soundOn INTEGER, volume REAL, rate REAL, pitch REAL)',
+      'CREATE TABLE $titleTable(id INTEGER PRIMARY KEY, name TEXT, image TEXT, languageCode TEXT, voice TEXT, reversMap INTEGER, soundOn INTEGER, volume REAL, rate REAL, pitch REAL)',
     );
   }
 
@@ -46,6 +47,7 @@ class DBProvider {
           name: '',
           image: '',
           languageCode: '',
+          voice: '',
           reversMap: true,
           soundOn: false,
           volume: 0,

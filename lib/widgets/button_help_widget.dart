@@ -99,7 +99,7 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
                       ),
                     ),
                     SvgPicture.asset(
-                      'assets/images/help_ok.svg',
+                      'assets/icon/help_ok.svg',
                       width: 25,
                       height: 25,
                     ),

@@ -114,11 +114,11 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                         duration: const Duration(milliseconds: 200),
                         child: globals.soundOn
                             ? SvgPicture.asset(
-                                'assets/images/sound_on.svg',
+                                'assets/icon/sound_on.svg',
                                 color: Colors.black,
                               )
                             : SvgPicture.asset(
-                                'assets/images/sound_off.svg',
+                                'assets/icon/sound_off.svg',
                                 color: Colors.black,
                               ),
                       )

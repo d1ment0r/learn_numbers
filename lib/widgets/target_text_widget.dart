@@ -21,7 +21,7 @@ class TargetTextWinget extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         if (state.buttomPressed && state.buttonChoise == state.truePosition) {
-          Future.delayed(const Duration(milliseconds: 800), () {
+          Future.delayed(const Duration(milliseconds: 200), () {
             developer.log('Target text widget: - updateScreenData');
             context.read<AppBlocBloc>().add(UpdateScreenEvent());
           });

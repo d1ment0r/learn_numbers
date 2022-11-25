@@ -76,13 +76,13 @@ class _MainScreenState extends State<MainScreen> {
         label: ''),
     BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
-          'assets/icon/graduate-student-svgrepo-com.svg',
+          'assets/icon/student-duotone-svgrepo-com.svg',
           width: 28,
           height: 28,
           color: const Color(0xFF3399CC),
         ),
         icon: SvgPicture.asset(
-          'assets/icon/graduate-student-svgrepo-com.svg',
+          'assets/icon/student-duotone-svgrepo-com.svg',
           width: 22,
           height: 22,
         ),

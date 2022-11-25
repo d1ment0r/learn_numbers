@@ -34,8 +34,8 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   // Special for me
   double progress = 0;
   bool _isElevated = false;
-  final _iAmCreater = false;
-  final _createJsonFile = false;
+  final _iAmCreater = true;
+  final _createJsonFile = true;
   bool _pressButtonCreater = false;
   final Uri toMySite = Uri(scheme: 'https', host: 'www.dmitrii.online');
 
@@ -45,6 +45,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     name: '',
     image: '',
     languageCode: '',
+    voice: '',
     reversMap: false,
     soundOn: true,
     volume: 1,
@@ -56,7 +57,8 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     id: 0,
     name: 'English (US)',
     image: 'assets/images/flags/us.png',
-    languageCode: 'en-US',
+    languageCode: 'en',
+    voice: 'en-US',
     reversMap: false,
     soundOn: true,
     volume: 1,
@@ -231,7 +233,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                                             ],
                                     ),
                                   ),
-                                  SvgPicture.asset('assets/images/ok_bold.svg',
+                                  SvgPicture.asset('assets/icon/ok_bold.svg',
                                       width: 40,
                                       height: 40,
                                       color: Colors.green),
@@ -305,12 +307,12 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                                   if (progress == 0)
                                     _createJsonFile
                                         ? SvgPicture.asset(
-                                            'assets/images/json.svg',
+                                            'assets/icon/json.svg',
                                             width: 60,
                                             height: 60,
                                           )
                                         : SvgPicture.asset(
-                                            'assets/images/txt.svg',
+                                            'assets/icon/txt.svg',
                                             width: 60,
                                             height: 60,
                                           ),
@@ -569,6 +571,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       String english = id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
       // Этап второй - английский в выбранный язык
       String languageCode = _selectedLanguage.languageCode.substring(0, 2);
+      languageCode = _selectedLanguage.languageCode;
       await translator.translate(english, to: languageCode).then((result) {
         String trueResult = result.toString().toLowerCase();
         // numericJSON.putIfAbsent(id.toString(), () => trueResult);

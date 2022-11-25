@@ -125,7 +125,7 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                       ),
                     ),
                     SvgPicture.asset(
-                      'assets/images/rotate.svg',
+                      'assets/icon/rotate.svg',
                       width: 22,
                       height: 22,
                     ),
