@@ -34,7 +34,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   // Special for me
   double progress = 0;
   bool _isElevated = false;
-  final _iAmCreater = true;
+  final _iAmCreater = false;
   final _createJsonFile = true;
   bool _pressButtonCreater = false;
   final Uri toMySite = Uri(scheme: 'https', host: 'www.dmitrii.online');

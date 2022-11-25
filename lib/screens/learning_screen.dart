@@ -285,7 +285,7 @@ Divider dividerWidget() {
 }
 
 Future<void> speak(sayText) async {
-  List<String> languages = <String>[];
+  String voice = '';
   List<String> languageCodes = <String>[];
   Language? language = globals.currentLanguage;
 
@@ -298,27 +298,20 @@ Future<void> speak(sayText) async {
     return;
   }
 
-  languages.clear();
-  for (final dynamic lang in displayLanguages) {
-    languages.add(lang as String);
-  }
-
   final String? defaultLangCode = await tts.getDefaultLanguage();
 
-  if (language!.languageCode != '' &&
-      !languageCodes.contains(language.languageCode)) {
-    if (language.languageCode != '' &&
-        languageCodes.contains(defaultLangCode)) {
-      globals.languageCode = defaultLangCode;
-    }
+  if (language!.voice != '' && languageCodes.contains(language.voice)) {
+    voice = language.voice;
+  } else {
+    voice = defaultLangCode.toString();
   }
   // final String? language =
   //     await tts.getDisplayLanguageByCode(language.languageCode);
 
   tts.setVolume(language.volume);
   tts.setRate(language.rate);
-  if (language.languageCode != '') {
-    tts.setLanguage(language.languageCode);
+  if (voice != '') {
+    tts.setLanguage(voice);
   } else {
     tts.setLanguage(defaultLangCode!);
   }

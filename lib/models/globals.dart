@@ -10,10 +10,6 @@ bool soundOn = true;
 bool splashScreenOn = true;
 int currentPage = 1;
 
-// Settings language speech
-String? languageCode;
-String defaultLanguageCode = 'en-US';
-
 // Settings speech
 double volume = 1; // Range: 0-1
 double rate = 1; // Range: 0-2

@@ -36,12 +36,7 @@ class DBProvider {
     final List<Map<String, dynamic>> languagesMapList =
         await db.query(titleTable);
     final List<Language> languagesList = [];
-    for (var languageMap in languagesMapList) {
-      languagesList.add(Language.fromMap(languageMap));
-    }
-    developer
-        .log('DB: (getSettings) read settings list ${languagesList.length}');
-    if (languagesList.isEmpty) {
+    if (languagesMapList.isEmpty) {
       return Language(
           id: 0,
           name: '',
@@ -54,6 +49,11 @@ class DBProvider {
           rate: 0,
           pitch: 0);
     } else {
+      for (var languageMap in languagesMapList) {
+        languagesList.add(Language.fromMap(languageMap));
+      }
+      developer
+          .log('DB: (getSettings) read settings list ${languagesList.length}');
       return languagesList.first;
     }
   }

@@ -144,7 +144,7 @@ String getTranslateTarget(int target) {
 }
 
 Future<void> speak(sayText, page) async {
-  List<String> languages = <String>[];
+  String voice = '';
   List<String> languageCodes = <String>[];
   Language? language = globals.currentLanguage;
 
@@ -157,31 +157,30 @@ Future<void> speak(sayText, page) async {
     return;
   }
 
-  languages.clear();
-  for (final dynamic lang in displayLanguages) {
-    languages.add(lang as String);
-  }
+  // languages.clear();
+  // for (final dynamic lang in displayLanguages) {
+  //   languages.add(lang as String);
+  // }
 
   final String? defaultLangCode = await tts.getDefaultLanguage();
 
-  if (language!.languageCode != '' &&
-      !languageCodes.contains(language.languageCode)) {
-    if (language.languageCode != '' &&
-        languageCodes.contains(defaultLangCode)) {
-      globals.languageCode = defaultLangCode;
-    }
+  if (language!.voice != '' && languageCodes.contains(language.voice)) {
+    voice = language.voice;
+  } else {
+    voice = defaultLangCode.toString();
   }
+
   // final String? language =
   //     await tts.getDisplayLanguageByCode(language.languageCode);
 
   tts.setVolume(language.volume);
   tts.setRate(language.rate);
-  if (language.languageCode != '') {
-    tts.setLanguage(language.languageCode);
-    developer.log('Language set:  ${language.languageCode}');
+  if (voice != '') {
+    tts.setLanguage(voice);
+    developer.log('State: voice set:  $voice');
   } else {
     tts.setLanguage(defaultLangCode!);
-    developer.log('Language set: $defaultLangCode');
+    developer.log('State: voice set: $defaultLangCode');
   }
   tts.setPitch(globals.pitch);
   // await Future.delayed(const Duration(milliseconds: 500));
