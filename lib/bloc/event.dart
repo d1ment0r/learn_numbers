@@ -1,8 +1,6 @@
 part of 'bloc.dart';
 
-abstract class AppEvent {
-  // const AppBlocEvent();
-}
+abstract class AppEvent {}
 
 class PressButtonChoiseEvent extends AppEvent {
   final int choise;

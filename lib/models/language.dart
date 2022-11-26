@@ -5,8 +5,8 @@ class Language extends Equatable {
   int id;
   String name;
   String image;
-  String languageCode;
-  String voice;
+  String translateCode;
+  String voiceCode;
   bool reversMap;
   bool soundOn;
   double volume;
@@ -17,8 +17,8 @@ class Language extends Equatable {
       {required this.id,
       required this.name,
       required this.image,
-      required this.languageCode,
-      required this.voice,
+      required this.translateCode,
+      required this.voiceCode,
       required this.reversMap,
       required this.soundOn,
       required this.volume,
@@ -30,10 +30,10 @@ class Language extends Equatable {
     map['id'] = id;
     map['name'] = name;
     map['image'] = image;
-    map['languageCode'] = languageCode;
-    map['voice'] = voice;
-    map['reversMap'] = reversMap;
-    map['soundOn'] = soundOn;
+    map['translateCode'] = translateCode;
+    map['voiceCode'] = voiceCode;
+    map['reversMap'] = reversMap ? 1 : 0;
+    map['soundOn'] = soundOn ? 1 : 0;
     map['volume'] = volume;
     map['rate'] = rate;
     map['pitch'] = pitch;
@@ -45,8 +45,8 @@ class Language extends Equatable {
       id: map['id'],
       name: map['name'],
       image: map['image'],
-      languageCode: map['languageCode'],
-      voice: map['voice'],
+      translateCode: map['translateCode'],
+      voiceCode: map['voiceCode'],
       reversMap: (map['reversMap'] != 0) ? true : false,
       soundOn: (map['soundOn'] != 0) ? true : false,
       volume: map['volume'],
@@ -58,10 +58,10 @@ class Language extends Equatable {
     return <Language>[
       Language(
         id: 0,
-        name: 'English (US)',
+        name: 'English',
         image: 'assets/images/flags/us.png',
-        languageCode: 'en',
-        voice: 'en-US',
+        translateCode: 'en',
+        voiceCode: 'en-US',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -72,8 +72,8 @@ class Language extends Equatable {
         id: 1,
         name: 'Malay',
         image: 'assets/images/flags/ms.png',
-        languageCode: 'ms',
-        voice: 'ms-MY',
+        translateCode: 'ms',
+        voiceCode: 'ms-MY',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -82,10 +82,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 2,
-        name: 'Français',
+        name: 'French',
         image: 'assets/images/flags/fr.png',
-        languageCode: 'fr',
-        voice: 'fr-FR',
+        translateCode: 'fr',
+        voiceCode: 'fr-FR',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -94,10 +94,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 3,
-        name: 'Türkçe',
+        name: 'Turkish',
         image: 'assets/images/flags/tr.png',
-        languageCode: 'tr',
-        voice: 'tr-TR',
+        translateCode: 'tr',
+        voiceCode: 'tr-TR',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -108,8 +108,8 @@ class Language extends Equatable {
         id: 4,
         name: 'Deutsch',
         image: 'assets/images/flags/de.png',
-        languageCode: 'de',
-        voice: 'de-DE',
+        translateCode: 'de',
+        voiceCode: 'de-DE',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -120,8 +120,8 @@ class Language extends Equatable {
         id: 5,
         name: 'Czech',
         image: 'assets/images/flags/cs.png',
-        languageCode: 'cs',
-        voice: 'cs-CS',
+        translateCode: 'cs',
+        voiceCode: 'cs-CS',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -130,10 +130,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 6,
-        name: 'Italiano',
+        name: 'Italian',
         image: 'assets/images/flags/it.png',
-        languageCode: 'it',
-        voice: 'it-IT',
+        translateCode: 'it',
+        voiceCode: 'it-IT',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -142,10 +142,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 7,
-        name: 'Русский',
+        name: 'Russian',
         image: 'assets/images/flags/ru.png',
-        languageCode: 'ru',
-        voice: 'ru-RU',
+        translateCode: 'ru',
+        voiceCode: 'ru-RU',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -154,10 +154,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 8,
-        name: 'Українська',
+        name: 'Ukrainian',
         image: 'assets/images/flags/ua.png',
-        languageCode: 'uk',
-        voice: 'uk-UA',
+        translateCode: 'uk',
+        voiceCode: 'uk-UA',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -168,8 +168,8 @@ class Language extends Equatable {
         id: 9,
         name: 'Estonian',
         image: 'assets/images/flags/et.png',
-        languageCode: 'et',
-        voice: 'et-ET',
+        translateCode: 'et',
+        voiceCode: 'et-ET',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -180,8 +180,8 @@ class Language extends Equatable {
         id: 10,
         name: 'Polish',
         image: 'assets/images/flags/pl.png',
-        languageCode: 'pl',
-        voice: 'pl-PL',
+        translateCode: 'pl',
+        voiceCode: 'pl-PL',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -192,8 +192,8 @@ class Language extends Equatable {
         id: 11,
         name: 'Spanish',
         image: 'assets/images/flags/es.png',
-        languageCode: 'es',
-        voice: 'es-ES',
+        translateCode: 'es',
+        voiceCode: 'es-ES',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -204,8 +204,8 @@ class Language extends Equatable {
         id: 12,
         name: 'Portuguese',
         image: 'assets/images/flags/pt.png',
-        languageCode: 'pt',
-        voice: 'pt-PT',
+        translateCode: 'pt',
+        voiceCode: 'pt-PT',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -216,8 +216,8 @@ class Language extends Equatable {
         id: 13,
         name: 'Croatian',
         image: 'assets/images/flags/hr.png',
-        languageCode: 'hr',
-        voice: 'hr-HR',
+        translateCode: 'hr',
+        voiceCode: 'hr-HR',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -228,8 +228,8 @@ class Language extends Equatable {
         id: 14,
         name: 'Finnish',
         image: 'assets/images/flags/fi.png',
-        languageCode: 'fi',
-        voice: 'fi-FI',
+        translateCode: 'fi',
+        voiceCode: 'fi-FI',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -240,8 +240,8 @@ class Language extends Equatable {
         id: 15,
         name: 'Latvian',
         image: 'assets/images/flags/lv.png',
-        languageCode: 'lv',
-        voice: 'lv-LV',
+        translateCode: 'lv',
+        voiceCode: 'lv-LV',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -252,8 +252,8 @@ class Language extends Equatable {
         id: 16,
         name: 'Romanian',
         image: 'assets/images/flags/ro.png',
-        languageCode: 'ro',
-        voice: 'ro-RO',
+        translateCode: 'ro',
+        voiceCode: 'ro-RO',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -264,8 +264,8 @@ class Language extends Equatable {
         id: 17,
         name: 'Georgian',
         image: 'assets/images/flags/gr.png',
-        languageCode: 'ka',
-        voice: 'ka-KA',
+        translateCode: 'ka',
+        voiceCode: 'ka-KA',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -274,10 +274,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 18,
-        name: 'Chinese Simplified',
+        name: 'Chinese (Simplified)',
         image: 'assets/images/flags/cn.png',
-        languageCode: 'zh-cn',
-        voice: 'zh-CN',
+        translateCode: 'zh-cn',
+        voiceCode: 'zh-CN',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -286,10 +286,10 @@ class Language extends Equatable {
       ),
       Language(
         id: 19,
-        name: 'Chinese Traditional',
+        name: 'Chinese (Traditional)',
         image: 'assets/images/flags/cn.png',
-        languageCode: 'zh-tw',
-        voice: 'zh-TW',
+        translateCode: 'zh-tw',
+        voiceCode: 'zh-TW',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -300,8 +300,8 @@ class Language extends Equatable {
         id: 20,
         name: 'Thai',
         image: 'assets/images/flags/th.png',
-        languageCode: 'th',
-        voice: 'th-TH',
+        translateCode: 'th',
+        voiceCode: 'th-TH',
         reversMap: false,
         soundOn: true,
         volume: 1,
@@ -312,5 +312,5 @@ class Language extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, languageCode];
+  List<Object?> get props => [id, translateCode];
 }

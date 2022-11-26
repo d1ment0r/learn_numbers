@@ -286,11 +286,11 @@ Divider dividerWidget() {
 
 Future<void> speak(sayText) async {
   String voice = '';
-  List<String> languageCodes = <String>[];
+  List<String> translateCodes = <String>[];
   Language? language = globals.currentLanguage;
 
   // populate lang code (i.e. en-US)
-  languageCodes = await tts.getLanguages();
+  translateCodes = await tts.getLanguages();
 
   // populate displayed language (i.e. English)
   final List<String>? displayLanguages = await tts.getDisplayLanguages();
@@ -300,13 +300,14 @@ Future<void> speak(sayText) async {
 
   final String? defaultLangCode = await tts.getDefaultLanguage();
 
-  if (language!.voice != '' && languageCodes.contains(language.voice)) {
-    voice = language.voice;
+  if (language!.voiceCode != '' &&
+      translateCodes.contains(language.voiceCode)) {
+    voice = language.voiceCode;
   } else {
     voice = defaultLangCode.toString();
   }
   // final String? language =
-  //     await tts.getDisplayLanguageByCode(language.languageCode);
+  //     await tts.getDisplayLanguageByCode(language.translateCode);
 
   tts.setVolume(language.volume);
   tts.setRate(language.rate);

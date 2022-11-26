@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:developer' as developer;
+import 'dart:developer' as console;
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -22,15 +22,15 @@ import 'main_screen.dart';
 
 TextToSpeech tts = TextToSpeech();
 
-class ChoiseLanguageScreen extends StatefulWidget {
-  const ChoiseLanguageScreen({super.key, required this.firstInit});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key, required this.firstInit});
   final bool firstInit;
 
   @override
-  State<ChoiseLanguageScreen> createState() => _ChoiseLanguageScreenState();
+  State<SettingsScreen> createState() => _CSettingsScreenState();
 }
 
-class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
+class _CSettingsScreenState extends State<SettingsScreen> {
   // Special for me
   double progress = 0;
   bool _isElevated = false;
@@ -39,13 +39,17 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   bool _pressButtonCreater = false;
   final Uri toMySite = Uri(scheme: 'https', host: 'www.dmitrii.online');
 
+// Settings Speech & Language
+  String? _voice;
+  String? _displayLanguage;
+
   // Map embeded languages
   Language _currentLanguage = Language(
     id: 0,
     name: '',
     image: '',
-    languageCode: '',
-    voice: '',
+    translateCode: '',
+    voiceCode: '',
     reversMap: false,
     soundOn: true,
     volume: 1,
@@ -57,8 +61,8 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     id: 0,
     name: 'English (US)',
     image: 'assets/images/flags/us.png',
-    languageCode: 'en',
-    voice: 'en-US',
+    translateCode: 'en',
+    voiceCode: 'en-US',
     reversMap: false,
     soundOn: true,
     volume: 1,
@@ -69,9 +73,6 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   List<DropdownMenuItem> dropdownMenuItems = [];
   List<Language> languages = [];
 
-  // Settings speech
-  String? _languageCode;
-
   bool _languageChange = false;
 
   @override
@@ -80,10 +81,11 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     dropdownMenuItems = buildDropdownMenuItems();
     if (widget.firstInit) {
       initializationApp();
-      developer.log('initSate - firstInit');
     } else {
       _currentLanguage = (globals.currentLanguage)!;
       _selectedLanguage = (globals.currentLanguage)!;
+      setVoice(globals.currentLanguage!.voiceCode);
+      setDisplayLanguageByCode(_currentLanguage.voiceCode);
     }
     super.initState();
   }
@@ -92,13 +94,17 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
   void initializationApp() async {
     // Read settings from db
     _currentLanguage = await DBProvider.db.getSettings();
-    if (_currentLanguage.languageCode != '') {
-      developer.log('_currentLanguage is not empty');
+    // Если в базе есть запись с выбранным языком, тогда возвращается записанный
+    // если язык не записан, то возвращается объект с translateCode = ''
+    if (_currentLanguage.translateCode != '') {
+      console.log(
+          '\u001b[1;33mSettings screen:\u001b[1;34m initializationApp \u001b[0mlanguage is \u001b[1;32m${_currentLanguage.translateCode}');
       globals.currentLanguage = _currentLanguage;
-      _languageCode = _currentLanguage.languageCode;
+      // Set speech voice
+      setVoice(_currentLanguage.voiceCode);
       // считываем файл с переводом
-      var jsonText =
-          await rootBundle.loadString('assets/json/${_languageCode!}.json');
+      var jsonText = await rootBundle
+          .loadString('assets/json/${_currentLanguage.translateCode}.json');
       Map<String, dynamic> data = json.decode(jsonText);
       // очищаем языковую карту, на случай если из настроек сменили язык
       globals.sortingMap.clear();
@@ -106,9 +112,10 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       data.forEach((key, value) {
         globals.sortingMap.putIfAbsent(int.parse(key), () => value.toString());
       });
-      // если языковая карта заполнена, возвращаемся на главный экран
+      // если языковая карта заполнена, то есть два варианта
       if (globals.sortingMap.isNotEmpty) {
-        // это запуск приложения
+        // Переходим на главный экран, потому что это запуск приложения
+        // при этом удаляем из пула этот, что бы кнопкой назад не попасть на него
         if (widget.firstInit) {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
@@ -119,7 +126,8 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
               (Route route) => false);
           await Future.delayed(const Duration(seconds: 1));
           FlutterNativeSplash.remove();
-          // это переход из запущенного приложения
+          // Возвращаемся туда, откуда был открыт экран настроек
+          // потосму что это переход из запущенного приложения
         } else {
           if (_languageChange) {
             // ignore: use_build_context_synchronously
@@ -134,9 +142,17 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
             Navigator.pop(context);
           }
         }
+      } else {
+        // TODO Ошибка при загрузке файла с переводом, добавить обработчик
       }
+      // Записей в базе нет, устанавливаем по умолчанию Английский
     } else {
       _currentLanguage = _selectedLanguage;
+      console.log(
+          '\u001b[1;33mSettings screen: \u001b[1;34minitializationApp \u001b[0mlanguage \u001b[1;32mset default');
+      // Set speech voice
+      setVoice(_currentLanguage.voiceCode);
+      setDisplayLanguageByCode(_currentLanguage.voiceCode);
       await Future.delayed(const Duration(seconds: 1));
       FlutterNativeSplash.remove();
     }
@@ -149,6 +165,7 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
         _isElevated = false;
       });
     }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -160,9 +177,11 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
         child: Column(
           children: [
             choiseLanguageWidget(),
+            rowVoiceAndLanguage(),
             rowVolumeWidget(),
             rowRateWidget(),
             rowPitchWidget(),
+            // Кнопки
             Expanded(
               child: Align(
                   alignment: Alignment.center,
@@ -240,99 +259,8 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
                                 ],
                               ),
                             )
-                          : GestureDetector(
-                              onTap: () async {
-                                setState(() {
-                                  _pressButtonCreater = !_pressButtonCreater;
-                                });
-                                if (_createJsonFile) {
-                                  createJsonFile();
-                                } else {
-                                  createTxtFile();
-                                }
-                              },
-                              // Кнопка, только для меня
-                              child: Stack(
-                                alignment: AlignmentDirectional.center,
-                                children: [
-                                  if (progress == 0)
-                                    AnimatedContainer(
-                                      duration:
-                                          const Duration(microseconds: 200),
-                                      height: 100.0,
-                                      width: 100.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            Colors.grey.shade100,
-                                            Colors.grey.shade100,
-                                          ],
-                                        ),
-                                        boxShadow: !_pressButtonCreater
-                                            ? [
-                                                const BoxShadow(
-                                                  color: Color(0xffccd0d3),
-                                                  spreadRadius: 2,
-                                                  blurRadius: 5,
-                                                  offset: Offset(4, 4),
-                                                ),
-                                                const BoxShadow(
-                                                  color: Colors.white,
-                                                  spreadRadius: 1,
-                                                  blurRadius: 5,
-                                                  offset: Offset(-4, -4),
-                                                ),
-                                              ]
-                                            : [
-                                                const BoxShadow(
-                                                  color: Color(0xffffffff),
-                                                  offset: Offset(-4, -4),
-                                                  blurRadius: 5,
-                                                  spreadRadius: 1,
-                                                  inset: true,
-                                                ),
-                                                const BoxShadow(
-                                                  color: Color(0xffccd0d3),
-                                                  offset: Offset(4, 4),
-                                                  blurRadius: 5,
-                                                  spreadRadius: 1,
-                                                  inset: true,
-                                                ),
-                                              ],
-                                      ),
-                                    ),
-                                  if (progress == 0)
-                                    _createJsonFile
-                                        ? SvgPicture.asset(
-                                            'assets/icon/json.svg',
-                                            width: 60,
-                                            height: 60,
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/icon/txt.svg',
-                                            width: 60,
-                                            height: 60,
-                                          ),
-                                  if (progress > 0)
-                                    CircularPercentIndicator(
-                                      radius: 100.0,
-                                      lineWidth: 18.0,
-                                      percent: progress,
-                                      backgroundColor: Colors.grey.shade300,
-                                      animation: false,
-                                      animationDuration: 500,
-                                      center: Text(
-                                        '${(progress * 100) ~/ 1} %',
-                                        style: const TextStyle(fontSize: 25.0),
-                                      ),
-                                      progressColor: const Color(0xFF3399CC),
-                                    ),
-                                ],
-                              ),
-                            ),
+                          // Кнопка, только для меня
+                          : buttonOnlyForCreater(),
                     ],
                   )),
             ),
@@ -361,6 +289,132 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding rowVoiceAndLanguage() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Text('Voice: '),
+              Text(
+                _voice != null ? 'found' : 'not found',
+                style: TextStyle(
+                    color: _voice != null ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text('Language: '),
+              Text(
+                _displayLanguage ?? _selectedLanguage.name,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector buttonOnlyForCreater() {
+    return GestureDetector(
+      onTap: () async {
+        setState(() {
+          _pressButtonCreater = !_pressButtonCreater;
+        });
+        if (_createJsonFile) {
+          createJsonFile();
+        } else {
+          createTxtFile();
+        }
+      },
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          if (progress == 0)
+            AnimatedContainer(
+              duration: const Duration(microseconds: 200),
+              height: 100.0,
+              width: 100.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.grey.shade100,
+                    Colors.grey.shade100,
+                  ],
+                ),
+                boxShadow: !_pressButtonCreater
+                    ? [
+                        const BoxShadow(
+                          color: Color(0xffccd0d3),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(4, 4),
+                        ),
+                        const BoxShadow(
+                          color: Colors.white,
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: Offset(-4, -4),
+                        ),
+                      ]
+                    : [
+                        const BoxShadow(
+                          color: Color(0xffffffff),
+                          offset: Offset(-4, -4),
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                          inset: true,
+                        ),
+                        const BoxShadow(
+                          color: Color(0xffccd0d3),
+                          offset: Offset(4, 4),
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                          inset: true,
+                        ),
+                      ],
+              ),
+            ),
+          if (progress == 0)
+            _createJsonFile
+                ? SvgPicture.asset(
+                    'assets/icon/json.svg',
+                    width: 60,
+                    height: 60,
+                  )
+                : SvgPicture.asset(
+                    'assets/icon/txt.svg',
+                    width: 60,
+                    height: 60,
+                  ),
+          if (progress > 0)
+            CircularPercentIndicator(
+              radius: 100.0,
+              lineWidth: 18.0,
+              percent: progress,
+              backgroundColor: Colors.grey.shade300,
+              animation: false,
+              animationDuration: 500,
+              center: Text(
+                '${(progress * 100) ~/ 1} %',
+                style: const TextStyle(fontSize: 25.0),
+              ),
+              progressColor: const Color(0xFF3399CC),
+            ),
+        ],
       ),
     );
   }
@@ -478,7 +532,9 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
     );
   }
 
-  onChangeDropdownItem(int id) {
+  onChangeDropdownItem(int id) async {
+    setVoice(languages[id].voiceCode);
+    setDisplayLanguageByCode(languages[id].voiceCode);
     setState(() {
       _selectedLanguage = languages[id];
       _selectedLanguage.reversMap = _currentLanguage.reversMap;
@@ -487,6 +543,32 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       _selectedLanguage.rate = _currentLanguage.rate;
       _selectedLanguage.pitch = _currentLanguage.pitch;
     });
+  }
+
+  Future<void> setVoice(voiceCode) async {
+    // final String? defaultLangCode = await tts.getDefaultLanguage();
+    _voice = null;
+    if (voiceCode != null && voiceCode != '') {
+      List<String> translateCodes = <String>[];
+      // populate lang code (i.e. en-US)
+      translateCodes = await tts.getLanguages();
+      if (translateCodes.contains(voiceCode)) {
+        _voice = voiceCode;
+      }
+    }
+    setState(() {});
+    globals.voice = _voice;
+    console.log(
+        '\u001b[1;33mSettings screen: \u001b[1;34msetVoice \u001b[0mvoice is \u001b[1;32m$_voice');
+  }
+
+  Future<void> setDisplayLanguageByCode(code) async {
+    if (code != null && code != '') {
+      _displayLanguage = await tts.getDisplayLanguageByCode(code);
+    }
+    setState(() {});
+    console.log(
+        '\u001b[1;33mSettings screen: \u001b[1;34mgetDisplayLanguageByCode \u001b[0mdisplay language is \u001b[1;32m$_displayLanguage');
   }
 
   List<DropdownMenuItem> buildDropdownMenuItems() {
@@ -524,21 +606,21 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
 
   Future<File> get _localFileJson async {
     final path = await _localPath;
-    developer.log('$path/${_selectedLanguage.languageCode}.json');
-    return File('$path/json/${_selectedLanguage.languageCode}.json');
+    console.log('$path/${_selectedLanguage.translateCode}.json');
+    return File('$path/json/${_selectedLanguage.translateCode}.json');
   }
 
   Future<File> get _localFileTxt async {
     final path = await _localPath;
-    developer.log('$path/${_selectedLanguage.languageCode}.txt');
-    return File('$path/${_selectedLanguage.languageCode}.txt');
+    console.log('$path/${_selectedLanguage.translateCode}.txt');
+    return File('$path/${_selectedLanguage.translateCode}.txt');
   }
 
   Future<void> createTxtFile() async {
     final filePath = await _localFileTxt;
     String string = '';
     var jsonText = await rootBundle
-        .loadString('assets/json/${_selectedLanguage.languageCode}.json');
+        .loadString('assets/json/${_selectedLanguage.translateCode}.json');
     Map<String, dynamic> data = json.decode(jsonText);
     // очищаем языковую карту, на случай если из настроек сменили язык
     globals.sortingMap.clear();
@@ -570,9 +652,9 @@ class _ChoiseLanguageScreenState extends State<ChoiseLanguageScreen> {
       // Этап первый - число в английский
       String english = id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
       // Этап второй - английский в выбранный язык
-      String languageCode = _selectedLanguage.languageCode.substring(0, 2);
-      languageCode = _selectedLanguage.languageCode;
-      await translator.translate(english, to: languageCode).then((result) {
+      String translateCode = _selectedLanguage.translateCode.substring(0, 2);
+      translateCode = _selectedLanguage.translateCode;
+      await translator.translate(english, to: translateCode).then((result) {
         String trueResult = result.toString().toLowerCase();
         // numericJSON.putIfAbsent(id.toString(), () => trueResult);
         sortingMap.putIfAbsent(id.toString(), () => trueResult);

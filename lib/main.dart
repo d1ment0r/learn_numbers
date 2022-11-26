@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_numbers/screens/choise_screen.dart';
+import 'package:learn_numbers/screens/settings_screen.dart';
 import 'package:learn_numbers/screens/main_screen.dart';
 
 import 'package:learn_numbers/themes/theme.dart';
@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const ChoiseLanguageScreen(
+      home: const SettingsScreen(
         firstInit: true,
       ),
       routes: <String, WidgetBuilder>{
-        '/choise': (BuildContext context) => const ChoiseLanguageScreen(
+        '/choise': (BuildContext context) => const SettingsScreen(
               firstInit: true,
             ),
         '/main': (BuildContext context) => const MainScreen(title: 'Turkish'),

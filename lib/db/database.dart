@@ -11,7 +11,7 @@ class DBProvider {
   static late Database _database;
 
   String titleTable = 'current';
-  int version = 2;
+  int version = 3;
 
   Future<Database> get database async {
     _database = await _initDB();
@@ -20,29 +20,29 @@ class DBProvider {
 
   Future<Database> _initDB() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = '${dir.path}/language.db';
+    String path = '${dir.path}/language3.db';
     return await openDatabase(path, version: version, onCreate: _createDB);
   }
 
   void _createDB(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE $titleTable(id INTEGER PRIMARY KEY, name TEXT, image TEXT, languageCode TEXT, voice TEXT, reversMap INTEGER, soundOn INTEGER, volume REAL, rate REAL, pitch REAL)',
+      'CREATE TABLE $titleTable(id INTEGER PRIMARY KEY, name TEXT, image TEXT, translateCode TEXT, voiceCode TEXT, reversMap INTEGER, soundOn INTEGER, volume REAL, rate REAL, pitch REAL)',
     );
   }
 
   // READ settings
   Future<Language> getSettings() async {
+    final List<Language> languagesList = [];
     Database db = await database;
     final List<Map<String, dynamic>> languagesMapList =
         await db.query(titleTable);
-    final List<Language> languagesList = [];
     if (languagesMapList.isEmpty) {
       return Language(
           id: 0,
           name: '',
           image: '',
-          languageCode: '',
-          voice: '',
+          translateCode: '',
+          voiceCode: '',
           reversMap: true,
           soundOn: false,
           volume: 0,
@@ -52,8 +52,8 @@ class DBProvider {
       for (var languageMap in languagesMapList) {
         languagesList.add(Language.fromMap(languageMap));
       }
-      developer
-          .log('DB: (getSettings) read settings list ${languagesList.length}');
+      developer.log(
+          '\u001b[1;33mDB.\u001b[1;34mgetSettings \u001b[0mread settings list ${languagesList.length}');
       return languagesList.first;
     }
   }
@@ -63,8 +63,8 @@ class DBProvider {
     Database db = await database;
     final int resultDelete = await db.delete(titleTable);
     final int resultInsert = await db.insert(titleTable, language.toMap());
-    developer
-        .log('DB: (updateSettins) delete: $resultDelete insert: $resultInsert');
+    developer.log(
+        '\u001b[1;33mDB.\u001b[1;34mupdateSettins \u001b[0mdelete: $resultDelete insert: $resultInsert');
     return language;
   }
 }

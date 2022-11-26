@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'dart:developer' as console;
 import 'package:learn_numbers/models/globals.dart' as globals;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +23,8 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
           truePosition: 0,
         )) {
     on<PressButtonChoiseEvent>((event, emit) {
-      developer.log('Event - PressButtonChoiseEvent');
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mPressButtonChoiseEvent');
       state.counter++;
       state.buttomPressed = true;
       state.buttonChoise = event.choise;
@@ -50,7 +51,8 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
 
     on<PressButtonHelpEvent>((event, emit) {
       state.buttonHelpPressed = true;
-      developer.log('Event - PressButtonHelpEvent');
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mPressButtonHelpEvent');
       emit(AppState.speech(
         counter: state.counter,
         buttomPressed: false,
@@ -69,9 +71,11 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
 
     on<ChangeSoundStateEvent>((event, emit) {
       if (globals.soundOn) {
-        developer.log('Event - ChangeSoundStateEvent, sound: on');
+        console.log(
+            '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mChangeSoundStateEvent, sound: on');
       } else {
-        developer.log('Event - ChangeSoundStateEvent, sound: off');
+        console.log(
+            '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mChangeSoundStateEvent, sound: off');
       }
       emit(AppState.speech(
         counter: state.counter,
@@ -91,7 +95,8 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
 
     on<PressButtonReversEvent>((event, emit) {
       globals.reversMap = !globals.reversMap;
-      developer.log('Event - PressButtonHelpEvent');
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mPressButtonHelpEvent');
       emit(AppState(
         counter: state.counter,
         buttomPressed: state.buttomPressed,
@@ -110,7 +115,8 @@ class AppBlocBloc extends Bloc<AppEvent, AppState> {
 
     on<UpdateScreenEvent>((event, emit) {
       state.buttomPressed = false;
-      developer.log('Event - UpdateScreenEvent');
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mUpdateScreenEvent');
       emit(AppState.update(
         counter: state.counter,
         buttomPressed: false,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:flutter_svg/svg.dart';
-import 'package:learn_numbers/screens/choise_screen.dart';
 import 'package:learn_numbers/screens/learning_screen.dart';
-import 'dart:developer' as developer;
+import 'dart:developer' as console;
 import 'package:learn_numbers/models/globals.dart' as globals;
+import 'package:learn_numbers/screens/settings_screen.dart';
 
 import 'one_screen.dart';
 import 'two_screen.dart';
@@ -105,10 +105,10 @@ class _MainScreenState extends State<MainScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              developer.log('Main screen - push to choise screen');
+              console.log(
+                  '\u001b[1;33mMain screen: \u001b[1;34monPressed IconButton\u001b[0m, first init: \u001b[1;32mfalse');
               Route route = MaterialPageRoute(
-                  builder: (context) =>
-                      const ChoiseLanguageScreen(firstInit: false));
+                  builder: (context) => const SettingsScreen(firstInit: false));
               Navigator.push(context, route);
             },
           )
@@ -120,7 +120,8 @@ class _MainScreenState extends State<MainScreen> {
           globals.currentPage = value + 1;
           setState(() {
             _currentPage = value;
-            developer.log('PageView: change page to: $value');
+            console.log(
+                '\u001b[1;33mMain screen: \u001b[1;34mPageView \u001b[0mchange page to: \u001b[1;32m$value');
           });
         },
         children: pages,
