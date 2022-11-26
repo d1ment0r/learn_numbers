@@ -29,8 +29,10 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
             alignment: Alignment.center,
             child: GestureDetector(
               onTap: () {
-                globals.soundOn = !globals.soundOn;
-                context.read<AppBlocBloc>().add(ChangeSoundStateEvent());
+                if (globals.voice != null) {
+                  globals.soundOn = !globals.soundOn;
+                  context.read<AppBlocBloc>().add(ChangeSoundStateEvent());
+                }
               },
               child: Padding(
                 padding: EdgeInsets.only(left: leftPaddingValue),
@@ -76,7 +78,10 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         margin: EdgeInsets.only(
-                            left: globals.soundOn ? 51.0 : 8.0, top: 6.0),
+                            left: globals.soundOn && globals.voice != null
+                                ? 51.0
+                                : 8.0,
+                            top: 6.0),
                         width: 30,
                         height: 30,
                         decoration: BoxDecoration(
@@ -110,9 +115,12 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                         width: 20,
                         height: 20,
                         margin: EdgeInsets.only(
-                            left: globals.soundOn ? 53.0 : 10.0, top: 10.0),
+                            left: globals.soundOn && globals.voice != null
+                                ? 53.0
+                                : 10.0,
+                            top: 10.0),
                         duration: const Duration(milliseconds: 200),
-                        child: globals.soundOn
+                        child: globals.soundOn && globals.voice != null
                             ? SvgPicture.asset(
                                 'assets/icon/sound_on.svg',
                                 color: Colors.black,

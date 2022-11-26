@@ -40,12 +40,14 @@ class _MainScreenState extends State<MainScreen> {
           'assets/icon/number-1.svg',
           width: 32,
           height: 32,
-          color: const Color(0xFF3399CC),
+          // color: const Color(0xFF3399CC),
+          color: Colors.black,
         ),
         icon: SvgPicture.asset(
           'assets/icon/number-1.svg',
-          width: 25,
-          height: 25,
+          width: 32,
+          height: 32,
+          color: Colors.grey.shade500,
         ),
         label: ''),
     BottomNavigationBarItem(
@@ -53,12 +55,15 @@ class _MainScreenState extends State<MainScreen> {
           'assets/icon/number-10.svg',
           width: 32,
           height: 32,
-          color: const Color(0xFF3399CC),
+
+          // color: const Color(0xFF3399CC),
+          color: Colors.black,
         ),
         icon: SvgPicture.asset(
           'assets/icon/number-10.svg',
-          width: 25,
-          height: 25,
+          width: 32,
+          height: 32,
+          color: Colors.grey.shade500,
         ),
         label: ''),
     BottomNavigationBarItem(
@@ -66,25 +71,27 @@ class _MainScreenState extends State<MainScreen> {
           'assets/icon/number-100.svg',
           width: 32,
           height: 32,
-          color: const Color(0xFF3399CC),
+          // color: const Color(0xFF3399CC),
+          color: Colors.black,
         ),
         icon: SvgPicture.asset(
           'assets/icon/number-100.svg',
-          width: 28,
-          height: 28,
+          width: 32,
+          height: 32,
+          color: Colors.grey.shade500,
         ),
         label: ''),
     BottomNavigationBarItem(
-        activeIcon: SvgPicture.asset(
-          'assets/icon/student-duotone-svgrepo-com.svg',
-          width: 28,
-          height: 28,
-          color: const Color(0xFF3399CC),
+        activeIcon: const Icon(
+          Icons.list_alt,
+          size: 28,
+          // color: Color(0xFF3399CC),
+          color: Colors.black,
         ),
-        icon: SvgPicture.asset(
-          'assets/icon/student-duotone-svgrepo-com.svg',
-          width: 22,
-          height: 22,
+        icon: Icon(
+          Icons.list_alt,
+          size: 28,
+          color: Colors.grey.shade500,
         ),
         label: ''),
   ];

@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
 
+// Кнопка выбора варианта ответа
+// При нажатии генерирует событие PressButtonChoiseEvent
 class ButtonChoiseWidget extends StatefulWidget {
   const ButtonChoiseWidget({
     super.key,

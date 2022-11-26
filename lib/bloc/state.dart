@@ -1,5 +1,6 @@
 import 'dart:developer' as console;
 import 'dart:math';
+import 'package:learn_numbers/core/speech.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:learn_numbers/models/language.dart';
 
@@ -53,11 +54,11 @@ class AppState {
     required this.truePosition,
     required this.listButton,
   }) {
-    console.log(
-        'State - AppState.speech page: $page currentPage: ${globals.currentPage}');
+    console.log('\u001b[1;33mState: \u001b[1;34mAppState.speech');
     if (soundOn) {
       Future.delayed(const Duration(milliseconds: 200), () {
-        speak(globals.sortingMap[target], page);
+        // speech(globals.sortingMap[target], page);
+        speech(target.toString(), page);
       });
     }
   }
@@ -118,7 +119,8 @@ class AppState {
     buttonHelpPressed = false;
     if (globals.soundOn) {
       Future.delayed(const Duration(seconds: 1), () {
-        speak(globals.sortingMap[target], page);
+        // speech(globals.sortingMap[target], page);
+        speech(target.toString(), page);
       });
     }
     console.log(
@@ -142,59 +144,4 @@ int getRandomTarget(int page) {
 
 String getTranslateTarget(int target) {
   return target > 0 ? NumberToWord().convert('en-in', target) : 'zero';
-}
-
-Future<void> speak(sayText, page) async {
-  if (globals.voice == null || globals.voice == '') {
-    console.log(
-        '\u001b[1;33mState:\u001b[1;34m speak \u001b[0mvoice is \u001b[1;31mnull');
-    return;
-  }
-
-  // String voice = '';
-  // List<String> translateCodes = <String>[];
-  Language? language = globals.currentLanguage;
-
-  // populate lang code (i.e. en-US)
-  // translateCodes = await tts.getLanguages();
-
-  // populate displayed language (i.e. English)
-  // final List<String>? displayLanguages = await tts.getDisplayLanguages();
-  // if (displayLanguages == null) {
-  //   return;
-  // }
-
-  // languages.clear();
-  // for (final dynamic lang in displayLanguages) {
-  //   languages.add(lang as String);
-  // }
-
-  // final String? defaultLangCode = await tts.getDefaultLanguage();
-
-  // if (language!.voiceCode != '' &&
-  //     translateCodes.contains(language.voiceCode)) {
-  //   voice = language.voiceCode;
-  // } else {
-  //   voice = defaultLangCode.toString();
-  // }
-
-  // final String? displayLanguage = await tts.getDisplayLanguageByCode(voice);
-
-  tts.setVolume(language!.volume);
-  tts.setRate(language.rate);
-  // if (voice != '') {
-  tts.setLanguage(globals.voice!);
-  console.log(
-      '\u001b[1;33mState: \u001b[1;34mspeak \u001b[0mvoice set: \u001b[1;32m${globals.voice}');
-  // } else {
-  //   tts.setLanguage(defaultLangCode!);
-  //   console.log('State: voice set: $defaultLangCode');
-  // }
-  tts.setPitch(globals.pitch);
-  // await Future.delayed(const Duration(milliseconds: 500));
-  if (page == globals.currentPage) {
-    tts.speak(sayText);
-  }
-  console.log(
-      '\u001b[1;33mState: \u001b[1;34mspeak page: \u001b[1;32m$page \u001b[0mcurrentPage: \u001b[1;32m${globals.currentPage}');
 }

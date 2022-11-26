@@ -130,6 +130,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
           // потосму что это переход из запущенного приложения
         } else {
           if (_languageChange) {
+            globals.currentPage = 1;
             // ignore: use_build_context_synchronously
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
@@ -652,8 +653,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
       // Этап первый - число в английский
       String english = id > 0 ? NumberToWord().convert('en-in', id) : 'zero';
       // Этап второй - английский в выбранный язык
-      String translateCode = _selectedLanguage.translateCode.substring(0, 2);
-      translateCode = _selectedLanguage.translateCode;
+      String translateCode = _selectedLanguage.translateCode;
       await translator.translate(english, to: translateCode).then((result) {
         String trueResult = result.toString().toLowerCase();
         // numericJSON.putIfAbsent(id.toString(), () => trueResult);

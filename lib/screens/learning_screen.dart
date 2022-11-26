@@ -2,10 +2,14 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:learn_numbers/core/speech.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:learn_numbers/models/language.dart';
+import 'package:number_to_words/number_to_words.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:developer' as developer;
+
+import 'package:translator/translator.dart';
 
 TextToSpeech tts = TextToSpeech();
 
@@ -21,6 +25,7 @@ class _LearningScreenState extends State<LearningScreen> {
   bool _isElevated = false;
   List<int> arrayNumbers = [];
   bool _speechButtonOn = false;
+  String _customTranslate = '_customTranslate';
   final searchController = TextEditingController();
 
   @override
@@ -40,7 +45,7 @@ class _LearningScreenState extends State<LearningScreen> {
     }
     if (_isElevated) {
       Future.delayed(const Duration(milliseconds: 150), () {
-        developer.log('press +0 button');
+        developer.log('press 0 button');
         setState(() {
           _isElevated = false;
         });
@@ -85,7 +90,7 @@ class _LearningScreenState extends State<LearningScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (searchController.text.length < 3) {
+          if (searchController.text.length < 6) {
             searchController.text = '${searchController.text}0';
             searchNumber(searchController.text);
           }
@@ -94,9 +99,9 @@ class _LearningScreenState extends State<LearningScreen> {
       },
       child: AnimatedContainer(
         duration: const Duration(microseconds: 150),
-        width: 32.0,
-        height: 32.0,
-        margin: const EdgeInsets.only(left: 48, right: 6.0),
+        width: 45.0,
+        height: 45.0,
+        margin: const EdgeInsets.only(left: 34, right: 6.0, bottom: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           gradient: LinearGradient(
@@ -143,8 +148,8 @@ class _LearningScreenState extends State<LearningScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             Text(
-              '+0',
-              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
+              '0',
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -158,7 +163,7 @@ class _LearningScreenState extends State<LearningScreen> {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         controller: searchController,
         keyboardType: TextInputType.number,
-        maxLength: 3,
+        maxLength: 6,
         style: const TextStyle(fontSize: 18.0),
         decoration: InputDecoration(
           counter: const Offstage(),
@@ -198,56 +203,93 @@ class _LearningScreenState extends State<LearningScreen> {
   GestureDetector rowNumbersWidget(int step) {
     return GestureDetector(
       onTap: () {
-        developer.log(arrayNumbers[step].toString());
-        setState(() {
-          _speechButtonOn = true;
-          _currentStep = step;
-        });
-        speak(globals.sortingMap[arrayNumbers[step]]);
+        if (globals.voice != null && globals.voice != '') {
+          developer.log(arrayNumbers[step].toString());
+          setState(() {
+            _speechButtonOn = true;
+            _currentStep = step;
+          });
+          if (searchController.text.length < 4) {
+            speech(arrayNumbers[step].toString(), 4);
+          } else {
+            speech(arrayNumbers[0].toString(), 4);
+          }
+        }
       },
       child: Padding(
         padding: const EdgeInsets.only(
-            left: 15.0, top: 7.0, bottom: 7.0, right: 15.0),
+            left: 15.0, top: 7.0, bottom: 7.0, right: 25.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 5.0, horizontal: 7.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        arrayNumbers[step].toString().padLeft(3, ' '),
-                        style: const TextStyle(fontSize: 18.0),
-                        textAlign: TextAlign.center,
+            Flexible(
+              child: Row(
+                children: [
+                  if (searchController.text.length < 4)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 7.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            arrayNumbers[step].toString().padLeft(3, ' '),
+                            style: const TextStyle(fontSize: 18.0),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      searchController.text.length < 4
+                          ? globals.sortingMap[arrayNumbers[step]]
+                          : _customTranslate,
+                      style: const TextStyle(fontSize: 20.0),
+                      maxLines: 3,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    globals.sortingMap[arrayNumbers[step]],
-                    style: const TextStyle(fontSize: 20.0),
-                  ),
-                ),
-              ],
-            ),
-            AnimatedContainer(
-              padding: const EdgeInsets.only(right: 10),
-              duration: const Duration(milliseconds: 500),
-              child: SvgPicture.asset(
-                'assets/icon/sound_on.svg',
-                width: 20,
-                height: 20,
-                color: _speechButtonOn && step == _currentStep
-                    ? const Color(0xFF3399CC)
-                    : Colors.black,
+                ],
               ),
             ),
+            if (globals.voice != null && globals.voice != '')
+              Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  const SizedBox(
+                    width: 30,
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 3,
+                      top: 5,
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/icon/sound_on.svg',
+                      width: 22,
+                      height: 22,
+                      color: _speechButtonOn && step == _currentStep
+                          ? Colors.grey.shade200
+                          : Colors.grey.shade400,
+                    ),
+                  ),
+                  // ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    child: SvgPicture.asset('assets/icon/sound_on.svg',
+                        width:
+                            _speechButtonOn && step == _currentStep ? 24 : 20,
+                        height:
+                            _speechButtonOn && step == _currentStep ? 24 : 20,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
+            // SizedBox(
+            //   width: 10.0,
+            // ),
           ],
         ),
       ),
@@ -255,14 +297,35 @@ class _LearningScreenState extends State<LearningScreen> {
   }
 
   void searchNumber(String query) {
-    fillArrayNumbers();
-    final suggestions = arrayNumbers.where((numer) {
-      final numerAsString = numer.toString();
-      return numerAsString.contains(query);
-    }).toList();
+    if (query.length < 4) {
+      fillArrayNumbers();
+      final suggestions = arrayNumbers.where((numer) {
+        final numerAsString = numer.toString();
+        return numerAsString.contains(query);
+      }).toList();
+      setState(() {
+        arrayNumbers = suggestions;
+      });
+    } else {
+      int numer = int.parse(query);
+      getTranslate(numer);
+    }
+  }
 
+  Future<void> getTranslate(numer) async {
+    final translator = GoogleTranslator();
+    final List<int> suggestions = [numer];
+    Language language = globals.currentLanguage!;
+    String translate = '';
+    String english =
+        numer > 0 ? NumberToWord().convert('en-in', numer) : 'zero';
+    String translateCode = language.translateCode;
+    await translator.translate(english, to: translateCode).then((result) {
+      translate = result.toString().toLowerCase();
+    });
     setState(() {
       arrayNumbers = suggestions;
+      _customTranslate = translate;
     });
   }
 
@@ -282,41 +345,4 @@ Divider dividerWidget() {
     thickness: 1,
     color: Color(0xFF3399CC),
   );
-}
-
-Future<void> speak(sayText) async {
-  String voice = '';
-  List<String> translateCodes = <String>[];
-  Language? language = globals.currentLanguage;
-
-  // populate lang code (i.e. en-US)
-  translateCodes = await tts.getLanguages();
-
-  // populate displayed language (i.e. English)
-  final List<String>? displayLanguages = await tts.getDisplayLanguages();
-  if (displayLanguages == null) {
-    return;
-  }
-
-  final String? defaultLangCode = await tts.getDefaultLanguage();
-
-  if (language!.voiceCode != '' &&
-      translateCodes.contains(language.voiceCode)) {
-    voice = language.voiceCode;
-  } else {
-    voice = defaultLangCode.toString();
-  }
-  // final String? language =
-  //     await tts.getDisplayLanguageByCode(language.translateCode);
-
-  tts.setVolume(language.volume);
-  tts.setRate(language.rate);
-  if (voice != '') {
-    tts.setLanguage(voice);
-  } else {
-    tts.setLanguage(defaultLangCode!);
-  }
-  tts.setPitch(globals.pitch);
-  await Future.delayed(const Duration(milliseconds: 500));
-  tts.speak(sayText);
 }
