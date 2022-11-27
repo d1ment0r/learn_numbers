@@ -57,18 +57,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
     pitch: 1,
   );
 
-  Language _selectedLanguage = Language(
-    id: 0,
-    name: 'English (US)',
-    image: 'assets/images/flags/us.png',
-    translateCode: 'en',
-    voiceCode: 'en-US',
-    reversMap: false,
-    soundOn: true,
-    volume: 1,
-    rate: 1,
-    pitch: 1,
-  );
+  Language _selectedLanguage = Language.getDefault();
 
   List<DropdownMenuItem> dropdownMenuItems = [];
   List<Language> languages = [];

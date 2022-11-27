@@ -54,10 +54,10 @@ class AppState {
   }) {
     console.log('\u001b[1;33mState: \u001b[1;34mAppState.speech');
     if (soundOn) {
-      Future.delayed(const Duration(milliseconds: 200), () {
-        // speech(globals.sortingMap[target], page);
-        speech(target.toString(), page);
-      });
+      // Future.delayed(const Duration(milliseconds: 200), () {
+      // speech(globals.sortingMap[target], page);
+      speech(target.toString(), page);
+      // });
     }
   }
 

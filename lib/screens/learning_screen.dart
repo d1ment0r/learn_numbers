@@ -45,34 +45,10 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (_speechButtonOn) {
-      Future.delayed(
-        const Duration(seconds: 1),
-        () {
-          setState(() {
-            _speechButtonOn = false;
-          });
-        },
-      );
-    }
-    if (_isElevated) {
-      Future.delayed(
-        const Duration(milliseconds: 150),
-        () {
-          developer.log('press 0 button');
-          setState(() {
-            _isElevated = false;
-          });
-        },
-      );
-    }
+    checkPressButtonSpeech();
+    checkPressButtonAddZero();
+    checkCustomTranslate();
 
     return Column(
       children: [
@@ -92,6 +68,46 @@ class _LearningScreenState extends State<LearningScreen>
         ),
       ],
     );
+  }
+
+  void checkPressButtonAddZero() {
+    if (_isElevated) {
+      Future.delayed(
+        const Duration(milliseconds: 150),
+        () {
+          developer.log('press 0 button');
+          setState(() {
+            _isElevated = false;
+          });
+        },
+      );
+    }
+  }
+
+  void checkPressButtonSpeech() {
+    if (_speechButtonOn) {
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {
+          setState(() {
+            _speechButtonOn = false;
+          });
+        },
+      );
+    }
+  }
+
+  void checkCustomTranslate() {
+    if (_customTranslateRun) {
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {
+          setState(() {
+            _customTranslateRun = false;
+          });
+        },
+      );
+    }
   }
 
   Container topRowWidget() {
@@ -233,11 +249,7 @@ class _LearningScreenState extends State<LearningScreen>
             _speechButtonOn = true;
             _currentStep = step;
           });
-          if (searchController.text.length < 4) {
-            speech(arrayNumbers[step].toString(), 4);
-          } else {
-            speech(arrayNumbers[0].toString(), 4);
-          }
+          speech(arrayNumbers[step].toString(), 4);
         }
       },
       child: Padding(
@@ -327,6 +339,7 @@ class _LearningScreenState extends State<LearningScreen>
       }).toList();
       setState(() {
         arrayNumbers = suggestions;
+        _customTranslateRun = false;
       });
     } else {
       int numer = int.parse(query);
@@ -362,6 +375,12 @@ class _LearningScreenState extends State<LearningScreen>
     globals.sortingMap.forEach((key, value) {
       arrayNumbers.add(key);
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 

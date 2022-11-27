@@ -54,6 +54,12 @@ class Language extends Equatable {
       pitch: map['pitch'],
     );
   }
+
+  factory Language.getDefault() {
+    List<Language> listLanguage = getAll();
+    return listLanguage[5];
+  }
+
   static List<Language> getAll() {
     return <Language>[
       Language(
