@@ -53,20 +53,25 @@ class _LearningScreenState extends State<LearningScreen>
   @override
   Widget build(BuildContext context) {
     if (_speechButtonOn) {
-      Future.delayed(const Duration(seconds: 1), () {
-        setState(() {
-          _speechButtonOn = false;
-        });
-      });
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {
+          setState(() {
+            _speechButtonOn = false;
+          });
+        },
+      );
     }
     if (_isElevated) {
-      Future.delayed(const Duration(milliseconds: 150), () {
-        developer.log('press 0 button');
-        setState(() {
-          _isElevated = false;
-        });
-      });
-      //
+      Future.delayed(
+        const Duration(milliseconds: 150),
+        () {
+          developer.log('press 0 button');
+          setState(() {
+            _isElevated = false;
+          });
+        },
+      );
     }
 
     return Column(
@@ -105,13 +110,15 @@ class _LearningScreenState extends State<LearningScreen>
   GestureDetector buttonAddZeroWidget() {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          if (searchController.text.length < 5) {
-            searchController.text = '${searchController.text}0';
-            searchNumber(searchController.text);
-          }
-          _isElevated = true;
-        });
+        setState(
+          () {
+            if (searchController.text.length < 5) {
+              searchController.text = '${searchController.text}0';
+              searchNumber(searchController.text);
+            }
+            _isElevated = true;
+          },
+        );
       },
       child: AnimatedContainer(
         duration: const Duration(microseconds: 150),
@@ -251,7 +258,6 @@ class _LearningScreenState extends State<LearningScreen>
                   ),
                 ),
               ],
-              // ),
             ),
             !_customTranslateRun
                 ? Expanded(
@@ -301,7 +307,6 @@ class _LearningScreenState extends State<LearningScreen>
                 : Colors.grey.shade400,
           ),
         ),
-        // ),
         AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           child: SvgPicture.asset('assets/icon/sound_on.svg',
