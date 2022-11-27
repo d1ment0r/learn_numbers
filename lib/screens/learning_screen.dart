@@ -45,6 +45,12 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_speechButtonOn) {
       Future.delayed(const Duration(seconds: 1), () {
