@@ -20,16 +20,26 @@ class LearningScreen extends StatefulWidget {
   State<LearningScreen> createState() => _LearningScreenState();
 }
 
-class _LearningScreenState extends State<LearningScreen> {
+class _LearningScreenState extends State<LearningScreen>
+    with TickerProviderStateMixin {
   int _currentStep = 0;
   bool _isElevated = false;
   List<int> arrayNumbers = [];
   bool _speechButtonOn = false;
-  String _customTranslate = '_customTranslate';
+  String _customTranslate = '';
+  bool _customTranslateRun = false;
   final searchController = TextEditingController();
+  late AnimationController controller;
 
   @override
   void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.repeat(reverse: true);
     fillArrayNumbers();
     super.initState();
   }
@@ -52,13 +62,73 @@ class _LearningScreenState extends State<LearningScreen> {
       });
       //
     }
+    if (_customTranslateRun) {
+      Future.delayed(const Duration(milliseconds: 250), () {
+        setState(() {
+          _customTranslateRun = false;
+        });
+      });
+    }
 
     return Column(
       children: [
         topRowWidget(),
-        Expanded(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          child: ListView.builder(
+        if (searchController.text.length > 3)
+          Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 15.0, right: 25.0, bottom: 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Text(
+                            arrayNumbers[0].toString(),
+                            style: const TextStyle(fontSize: 18.0),
+                            // textAlign: TextAlign.left,
+                          ),
+                        ),
+                      ],
+                      // ),
+                    ),
+                    _customTranslateRun
+                        ? CircularProgressIndicator(
+                            value: controller.value,
+                            strokeWidth: 2.0,
+                            semanticsLabel: 'Get tranlate ...',
+                          )
+                        : Flexible(
+                            child: Text(
+                            _customTranslate,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 20.0),
+                          )),
+                    if (globals.voice != null && globals.voice != '')
+                      GestureDetector(
+                          onTap: () {
+                            developer.log(arrayNumbers[0].toString());
+                            setState(() {
+                              _speechButtonOn = true;
+                              _currentStep = 0;
+                            });
+                            speech(arrayNumbers[0].toString(), 4);
+                          },
+                          child: buttonSpeechNumer(0)),
+                  ],
+                ),
+              ),
+              dividerWidget(),
+            ],
+          ),
+        if (searchController.text.length < 4)
+          Expanded(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: ListView.builder(
               itemCount: arrayNumbers.length,
               itemBuilder: (context, index) {
                 return Column(
@@ -67,8 +137,9 @@ class _LearningScreenState extends State<LearningScreen> {
                     dividerWidget(),
                   ],
                 );
-              }),
-        ),
+              },
+            ),
+          ),
       ],
     );
   }
@@ -90,7 +161,7 @@ class _LearningScreenState extends State<LearningScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (searchController.text.length < 6) {
+          if (searchController.text.length < 5) {
             searchController.text = '${searchController.text}0';
             searchNumber(searchController.text);
           }
@@ -163,10 +234,11 @@ class _LearningScreenState extends State<LearningScreen> {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         controller: searchController,
         keyboardType: TextInputType.number,
-        maxLength: 6,
+        maxLength: 5,
         style: const TextStyle(fontSize: 18.0),
         decoration: InputDecoration(
-          counter: const Offstage(),
+          // отключает счетчик введённых цифр
+          // counter: const Offstage(),
           prefixIcon: const Icon(Icons.search),
           suffixIcon: IconButton(
             onPressed: () {
@@ -222,77 +294,69 @@ class _LearningScreenState extends State<LearningScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
-              child: Row(
-                children: [
-                  if (searchController.text.length < 4)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 7.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            arrayNumbers[step].toString().padLeft(3, ' '),
-                            style: const TextStyle(fontSize: 18.0),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      searchController.text.length < 4
-                          ? globals.sortingMap[arrayNumbers[step]]
-                          : _customTranslate,
-                      style: const TextStyle(fontSize: 20.0),
-                      maxLines: 3,
-                    ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Text(
+                    arrayNumbers[step].toString().padLeft(3, ' '),
+                    style: const TextStyle(fontSize: 18.0),
+                    // textAlign: TextAlign.left,
                   ),
-                ],
+                ),
+              ],
+              // ),
+            ),
+            Expanded(
+              child: Text(
+                globals.sortingMap[arrayNumbers[step]],
+                style: const TextStyle(fontSize: 20.0),
+                textAlign: TextAlign.left,
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only(right: 5.0),
+            ),
             if (globals.voice != null && globals.voice != '')
-              Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  const SizedBox(
-                    width: 30,
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 3,
-                      top: 5,
-                    ),
-                    child: SvgPicture.asset(
-                      'assets/icon/sound_on.svg',
-                      width: 22,
-                      height: 22,
-                      color: _speechButtonOn && step == _currentStep
-                          ? Colors.grey.shade200
-                          : Colors.grey.shade400,
-                    ),
-                  ),
-                  // ),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    child: SvgPicture.asset('assets/icon/sound_on.svg',
-                        width:
-                            _speechButtonOn && step == _currentStep ? 24 : 20,
-                        height:
-                            _speechButtonOn && step == _currentStep ? 24 : 20,
-                        color: Colors.black),
-                  ),
-                ],
-              ),
-            // SizedBox(
-            //   width: 10.0,
-            // ),
+              buttonSpeechNumer(step),
           ],
         ),
       ),
+    );
+  }
+
+  Stack buttonSpeechNumer(int step) {
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        const SizedBox(
+          width: 30,
+          height: 30,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 3,
+            top: 5,
+          ),
+          child: SvgPicture.asset(
+            'assets/icon/sound_on.svg',
+            width: 22,
+            height: 22,
+            color: _speechButtonOn && step == _currentStep
+                ? Colors.grey.shade200
+                : Colors.grey.shade400,
+          ),
+        ),
+        // ),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          child: SvgPicture.asset('assets/icon/sound_on.svg',
+              width: _speechButtonOn && step == _currentStep ? 24 : 20,
+              height: _speechButtonOn && step == _currentStep ? 24 : 20,
+              color: Colors.black),
+        ),
+      ],
     );
   }
 
@@ -308,6 +372,10 @@ class _LearningScreenState extends State<LearningScreen> {
       });
     } else {
       int numer = int.parse(query);
+      setState(() {
+        _customTranslateRun = true;
+        _customTranslate = '';
+      });
       getTranslate(numer);
     }
   }

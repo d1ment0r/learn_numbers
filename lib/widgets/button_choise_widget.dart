@@ -99,30 +99,39 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
 
               /// TEXT
               child: Center(
-                child: Text(
-                  state.buttonReverse
-                      ? globals.sortingMap[state.listButton[widget.number]]
-                      : state.listButton[widget.number].toString(),
-                  style: TextStyle(
-                      color: isGreenButton
-                          ? Colors.green
-                          : isRedButton
-                              ? Colors.red
-                              : Colors.black,
-                      fontSize: state.page == 1
-                          ? !state.buttonReverse
-                              ? 30.0 * resize
-                              : 28.0 * resize
-                          : state.page == 2
-                              ? !state.buttonReverse
-                                  ? 30.0 * resize
-                                  : 25.0 * resize
-                              : !state.buttonReverse
-                                  ? 30.0 * resize
-                                  : 23.0 * resize,
-                      fontWeight: state.buttonReverse
-                          ? FontWeight.w500
-                          : FontWeight.w700),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        state.buttonReverse
+                            ? globals
+                                .sortingMap[state.listButton[widget.number]]
+                            : state.listButton[widget.number].toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: isGreenButton
+                                ? Colors.green
+                                : isRedButton
+                                    ? Colors.red
+                                    : Colors.black,
+                            fontSize: state.page == 1
+                                ? !state.buttonReverse
+                                    ? 30.0 * resize
+                                    : 20.0 * resize
+                                : state.page == 2
+                                    ? !state.buttonReverse
+                                        ? 30.0 * resize
+                                        : 20.0 * resize
+                                    : !state.buttonReverse
+                                        ? 30.0 * resize
+                                        : 18.0 * resize,
+                            fontWeight: state.buttonReverse
+                                ? FontWeight.w500
+                                : FontWeight.w700),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

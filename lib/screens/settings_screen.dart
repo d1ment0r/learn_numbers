@@ -35,7 +35,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   double progress = 0;
   bool _isElevated = false;
   final _iAmCreater = false;
-  final _createJsonFile = true;
+  final _createJsonFile = false;
   bool _pressButtonCreater = false;
   final Uri toMySite = Uri(scheme: 'https', host: 'www.dmitrii.online');
 
@@ -84,7 +84,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
     } else {
       _currentLanguage = (globals.currentLanguage)!;
       _selectedLanguage = (globals.currentLanguage)!;
-      setVoice(globals.currentLanguage!.voiceCode);
+      setVoice(globals.currentLanguage!.voiceCode, false);
       setDisplayLanguageByCode(_currentLanguage.voiceCode);
     }
     super.initState();
@@ -101,7 +101,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
           '\u001b[1;33mSettings screen:\u001b[1;34m initializationApp \u001b[0mlanguage is \u001b[1;32m${_currentLanguage.translateCode}');
       globals.currentLanguage = _currentLanguage;
       // Set speech voice
-      setVoice(_currentLanguage.voiceCode);
+      setVoice(_currentLanguage.voiceCode, true);
       // считываем файл с переводом
       var jsonText = await rootBundle
           .loadString('assets/json/${_currentLanguage.translateCode}.json');
@@ -152,7 +152,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
       console.log(
           '\u001b[1;33mSettings screen: \u001b[1;34minitializationApp \u001b[0mlanguage \u001b[1;32mset default');
       // Set speech voice
-      setVoice(_currentLanguage.voiceCode);
+      setVoice(_currentLanguage.voiceCode, true);
       setDisplayLanguageByCode(_currentLanguage.voiceCode);
       await Future.delayed(const Duration(seconds: 1));
       FlutterNativeSplash.remove();
@@ -534,7 +534,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   }
 
   onChangeDropdownItem(int id) async {
-    setVoice(languages[id].voiceCode);
+    setVoice(languages[id].voiceCode, false);
     setDisplayLanguageByCode(languages[id].voiceCode);
     setState(() {
       _selectedLanguage = languages[id];
@@ -546,7 +546,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
     });
   }
 
-  Future<void> setVoice(voiceCode) async {
+  Future<void> setVoice(voiceCode, global) async {
     // final String? defaultLangCode = await tts.getDefaultLanguage();
     _voice = null;
     if (voiceCode != null && voiceCode != '') {
@@ -557,8 +557,10 @@ class _CSettingsScreenState extends State<SettingsScreen> {
         _voice = voiceCode;
       }
     }
+    if (global) {
+      globals.voice = _voice;
+    }
     setState(() {});
-    globals.voice = _voice;
     console.log(
         '\u001b[1;33mSettings screen: \u001b[1;34msetVoice \u001b[0mvoice is \u001b[1;32m$_voice');
   }
@@ -620,6 +622,8 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   Future<void> createTxtFile() async {
     final filePath = await _localFileTxt;
     String string = '';
+    int maxLength = 0;
+    String maxLengthString = '';
     var jsonText = await rootBundle
         .loadString('assets/json/${_selectedLanguage.translateCode}.json');
     Map<String, dynamic> data = json.decode(jsonText);
@@ -629,14 +633,21 @@ class _CSettingsScreenState extends State<SettingsScreen> {
     data.forEach((key, value) {
       globals.sortingMap.putIfAbsent(int.parse(key), () => value.toString());
     });
+
     for (int i = 0; i < 1000; i++) {
       string =
           '$string${i.toString().padLeft(3, ' ')} ${globals.sortingMap[i].toString()}\n';
+      if (globals.sortingMap[i].toString().length > maxLength) {
+        maxLength = globals.sortingMap[i].toString().length;
+        maxLengthString = i.toString();
+      }
       setState(() {
         progress = i / 1000;
       });
     }
 
+    console.log(
+        '${_selectedLanguage.name} max lenght $maxLength numer $maxLengthString');
     filePath.writeAsString(string);
     setState(() {
       progress = 0;
