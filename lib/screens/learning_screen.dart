@@ -68,84 +68,23 @@ class _LearningScreenState extends State<LearningScreen>
       });
       //
     }
-    if (_customTranslateRun) {
-      Future.delayed(const Duration(milliseconds: 250), () {
-        setState(() {
-          _customTranslateRun = false;
-        });
-      });
-    }
 
     return Column(
       children: [
         topRowWidget(),
-        if (searchController.text.length > 3)
-          Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 25.0, bottom: 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: Text(
-                            arrayNumbers[0].toString(),
-                            style: const TextStyle(fontSize: 18.0),
-                            // textAlign: TextAlign.left,
-                          ),
-                        ),
-                      ],
-                      // ),
-                    ),
-                    _customTranslateRun
-                        ? CircularProgressIndicator(
-                            value: controller.value,
-                            strokeWidth: 2.0,
-                            semanticsLabel: 'Get tranlate ...',
-                          )
-                        : Flexible(
-                            child: Text(
-                            _customTranslate,
-                            textAlign: TextAlign.start,
-                            style: const TextStyle(fontSize: 20.0),
-                          )),
-                    if (globals.voice != null && globals.voice != '')
-                      GestureDetector(
-                          onTap: () {
-                            developer.log(arrayNumbers[0].toString());
-                            setState(() {
-                              _speechButtonOn = true;
-                              _currentStep = 0;
-                            });
-                            speech(arrayNumbers[0].toString(), 4);
-                          },
-                          child: buttonSpeechNumer(0)),
-                  ],
-                ),
-              ),
-              dividerWidget(),
-            ],
+        Expanded(
+          child: ListView.builder(
+            itemCount: arrayNumbers.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  rowNumbersWidget(index),
+                  dividerWidget(),
+                ],
+              );
+            },
           ),
-        if (searchController.text.length < 4)
-          Expanded(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            child: ListView.builder(
-              itemCount: arrayNumbers.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    rowNumbersWidget(index),
-                    dividerWidget(),
-                  ],
-                );
-              },
-            ),
-          ),
+        ),
       ],
     );
   }
@@ -314,13 +253,21 @@ class _LearningScreenState extends State<LearningScreen>
               ],
               // ),
             ),
-            Expanded(
-              child: Text(
-                globals.sortingMap[arrayNumbers[step]],
-                style: const TextStyle(fontSize: 20.0),
-                textAlign: TextAlign.left,
-              ),
-            ),
+            !_customTranslateRun
+                ? Expanded(
+                    child: Text(
+                      searchController.text.length < 4
+                          ? globals.sortingMap[arrayNumbers[step]]
+                          : _customTranslate,
+                      style: const TextStyle(fontSize: 20.0),
+                      textAlign: TextAlign.left,
+                    ),
+                  )
+                : CircularProgressIndicator(
+                    value: controller.value,
+                    strokeWidth: 2.0,
+                    semanticsLabel: 'Get tranlate ...',
+                  ),
             const Padding(
               padding: EdgeInsets.only(right: 5.0),
             ),
@@ -378,6 +325,7 @@ class _LearningScreenState extends State<LearningScreen>
       });
     } else {
       int numer = int.parse(query);
+      if (numer == 0) return;
       setState(() {
         _customTranslateRun = true;
         _customTranslate = '';
@@ -400,6 +348,7 @@ class _LearningScreenState extends State<LearningScreen>
     setState(() {
       arrayNumbers = suggestions;
       _customTranslate = translate;
+      _customTranslateRun = false;
     });
   }
 

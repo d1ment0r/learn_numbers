@@ -2,8 +2,6 @@ import 'dart:developer' as console;
 import 'dart:math';
 import 'package:learn_numbers/core/speech.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
-import 'package:learn_numbers/models/language.dart';
-
 import 'package:number_to_words/number_to_words.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
