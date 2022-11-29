@@ -26,8 +26,7 @@ class _LearningScreenState extends State<LearningScreen>
   bool _isElevated = false;
   List<int> arrayNumbers = [];
   bool _speechButtonOn = false;
-  String _customTranslate = '';
-  bool _customTranslateRun = false;
+  String customTranslate = '';
   final searchController = TextEditingController();
   late AnimationController controller;
 
@@ -48,24 +47,29 @@ class _LearningScreenState extends State<LearningScreen>
   Widget build(BuildContext context) {
     checkPressButtonSpeech();
     checkPressButtonAddZero();
-    checkCustomTranslate();
 
     return Column(
       children: [
         topRowWidget(),
-        Expanded(
-          child: ListView.builder(
-            itemCount: arrayNumbers.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  rowNumbersWidget(index),
-                  dividerWidget(),
-                ],
-              );
-            },
-          ),
-        ),
+        arrayNumbers.isEmpty
+            ? CircularProgressIndicator(
+                value: controller.value,
+                strokeWidth: 2.0,
+                semanticsLabel: 'Get tranlate ...',
+              )
+            : Expanded(
+                child: ListView.builder(
+                  itemCount: arrayNumbers.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        rowNumbersWidget(index),
+                        dividerWidget(),
+                      ],
+                    );
+                  },
+                ),
+              ),
       ],
     );
   }
@@ -91,19 +95,6 @@ class _LearningScreenState extends State<LearningScreen>
         () {
           setState(() {
             _speechButtonOn = false;
-          });
-        },
-      );
-    }
-  }
-
-  void checkCustomTranslate() {
-    if (_customTranslateRun) {
-      Future.delayed(
-        const Duration(seconds: 1),
-        () {
-          setState(() {
-            _customTranslateRun = false;
           });
         },
       );
@@ -271,21 +262,15 @@ class _LearningScreenState extends State<LearningScreen>
                 ),
               ],
             ),
-            !_customTranslateRun
-                ? Expanded(
-                    child: Text(
-                      searchController.text.length < 4
-                          ? globals.sortingMap[arrayNumbers[step]]
-                          : _customTranslate,
-                      style: const TextStyle(fontSize: 20.0),
-                      textAlign: TextAlign.left,
-                    ),
-                  )
-                : CircularProgressIndicator(
-                    value: controller.value,
-                    strokeWidth: 2.0,
-                    semanticsLabel: 'Get tranlate ...',
-                  ),
+            Expanded(
+              child: Text(
+                arrayNumbers[step] < 1000
+                    ? globals.sortingMap[arrayNumbers[step]]
+                    : customTranslate,
+                style: const TextStyle(fontSize: 20.0),
+                textAlign: TextAlign.left,
+              ),
+            ),
             const Padding(
               padding: EdgeInsets.only(right: 5.0),
             ),
@@ -331,7 +316,8 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   void searchNumber(String query) {
-    if (query.length < 4) {
+    int numer = query.isNotEmpty ? int.parse(query) : 0;
+    if (query.length < 3) {
       fillArrayNumbers();
       final suggestions = arrayNumbers.where((numer) {
         final numerAsString = numer.toString();
@@ -339,34 +325,30 @@ class _LearningScreenState extends State<LearningScreen>
       }).toList();
       setState(() {
         arrayNumbers = suggestions;
-        _customTranslateRun = false;
       });
+    } else if (query.length == 3) {
+      arrayNumbers = [numer];
     } else {
-      int numer = int.parse(query);
-      if (numer == 0) return;
-      setState(() {
-        _customTranslateRun = true;
-        _customTranslate = '';
-      });
-      getTranslate(numer);
+      arrayNumbers = [numer];
+      if (numer > 999) {
+        getTranslate(numer);
+      }
     }
   }
 
-  Future<void> getTranslate(numer) async {
+  Future<void> getTranslate(int numer) async {
     final translator = GoogleTranslator();
-    final List<int> suggestions = [numer];
-    Language language = globals.currentLanguage!;
-    String translate = '';
+    // final List<int> suggestions = [numer];
+    Language language = globals.currentLanguage;
     String english =
         numer > 0 ? NumberToWord().convert('en-in', numer) : 'zero';
     String translateCode = language.translateCode;
     await translator.translate(english, to: translateCode).then((result) {
-      translate = result.toString().toLowerCase();
-    });
-    setState(() {
-      arrayNumbers = suggestions;
-      _customTranslate = translate;
-      _customTranslateRun = false;
+      setState(() {
+        customTranslate = result.toString().toLowerCase();
+        developer.log(
+            'Learning screen: getTranslate _customTranslate $customTranslate for ${arrayNumbers[0]}');
+      });
     });
   }
 

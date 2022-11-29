@@ -44,20 +44,8 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   String? _displayLanguage;
 
   // Map embeded languages
-  Language _currentLanguage = Language(
-    id: 0,
-    name: '',
-    image: '',
-    translateCode: '',
-    voiceCode: '',
-    reversMap: false,
-    soundOn: true,
-    volume: 1,
-    rate: 1,
-    pitch: 1,
-  );
-
-  Language _selectedLanguage = Language.getDefault();
+  Language _currentLanguage = globals.currentLanguage;
+  Language _selectedLanguage = globals.currentLanguage;
 
   List<DropdownMenuItem> dropdownMenuItems = [];
   List<Language> languages = [];
@@ -71,9 +59,9 @@ class _CSettingsScreenState extends State<SettingsScreen> {
     if (widget.firstInit) {
       initializationApp();
     } else {
-      _currentLanguage = (globals.currentLanguage)!;
-      _selectedLanguage = (globals.currentLanguage)!;
-      setVoice(globals.currentLanguage!.voiceCode, false);
+      _currentLanguage = (globals.currentLanguage);
+      _selectedLanguage = (globals.currentLanguage);
+      setVoice(globals.currentLanguage.voiceCode, false);
       setDisplayLanguageByCode(_currentLanguage.voiceCode);
     }
     super.initState();

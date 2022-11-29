@@ -16,7 +16,7 @@ double rate = 1; // Range: 0-2
 double pitch = 1; // Range: 0-2
 String? voice;
 
-Language? currentLanguage;
+Language currentLanguage = Language.getDefault();
 
 //Counter Answers
 int totalAnswers = 0;

@@ -41,7 +41,7 @@ Future<void> speech(sayText, page) async {
 
   // final String? displayLanguage = await tts.getDisplayLanguageByCode(voice);
 
-  tts.setVolume(language!.volume);
+  tts.setVolume(language.volume);
   tts.setRate(language.rate);
   // if (voice != '') {
   tts.setLanguage(globals.voice!);

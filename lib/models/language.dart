@@ -60,6 +60,21 @@ class Language extends Equatable {
     return listLanguage[5];
   }
 
+  factory Language.getClean() {
+    return Language(
+      id: 0,
+      name: '',
+      image: '',
+      translateCode: '',
+      voiceCode: '',
+      reversMap: false,
+      soundOn: true,
+      volume: 1,
+      rate: 1,
+      pitch: 1,
+    );
+  }
+
   static List<Language> getAll() {
     return <Language>[
       Language(

@@ -116,8 +116,7 @@ class AppState {
     this.target = target;
     buttonHelpPressed = false;
     if (globals.soundOn) {
-      Future.delayed(const Duration(seconds: 1), () {
-        // speech(globals.sortingMap[target], page);
+      Future.delayed(const Duration(milliseconds: 400), () {
         speech(target.toString(), page);
       });
     }
