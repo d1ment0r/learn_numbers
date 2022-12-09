@@ -299,16 +299,22 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.copyright,
                         size: 14.0,
-                        color: Colors.blue.shade800,
+                      ),
+                      SizedBox(
+                        width: 10,
                       ),
                       Text(
-                        '  dmitrii.online',
+                        'dmitrii.online',
                         style: TextStyle(
-                            fontSize: 16.0, color: Colors.blue.shade800),
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 2.0,
+                          decoration: TextDecoration.underline,
+                        ),
                       )
                     ],
                   ),

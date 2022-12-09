@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 ThemeData lightTheme = ThemeData.light().copyWith(
+  scaffoldBackgroundColor: lithAppColors,
   colorScheme: const ColorScheme.light(
     brightness: Brightness.light,
     primary: Color(0xFF3399cc),
@@ -11,12 +12,18 @@ ThemeData lightTheme = ThemeData.light().copyWith(
     // фон AppBar
     surface: Color(0xFF3399CC),
   ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    backgroundColor: Color(0xFF006a9b),
+    selectedItemColor: Colors.white70,
+    unselectedItemColor: Colors.black87,
+  ),
   dividerTheme: const DividerThemeData(
     color: Color(0xFF3399CC),
   ),
 );
 
 Color lithAppColors = Colors.grey.shade100;
+// Color lithAppColors = const Color(0xFF70c9ff);
 Color lithAppShadowTop = const Color(0xFFFFFFFF);
 Color lithAppShadowBottom = const Color(0xffccd0d3);
 Color lithAppTextColor = const Color(0xff333333);
