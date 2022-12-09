@@ -1,4 +1,6 @@
 import 'dart:developer' as developer;
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:learn_numbers/models/globals.dart' as globals;
 
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
+import 'package:learn_numbers/themes/theme.dart';
 
 class HeaderCounterWidget extends StatefulWidget {
   const HeaderCounterWidget({
@@ -30,9 +33,13 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
       });
       //
     }
+
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
+        bool isDark =
+            ThemeModelInheritedNotifier.of(context).theme.brightness ==
+                Brightness.dark;
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -41,7 +48,7 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
               child: Row(
                 children: [
                   Text(
-                    state.good.toString(),
+                    globals.good.toString(),
                     style: const TextStyle(
                         color: Colors.green,
                         // fontWeight: FontWeight.bold,
@@ -49,7 +56,7 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                   ),
                   const Text(' / '),
                   Text(
-                    state.wrong.toString(),
+                    globals.wrong.toString(),
                     style: const TextStyle(
                         color: Colors.red,
                         // fontWeight: FontWeight.bold,
@@ -57,9 +64,9 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                   ),
                   const Text(' / '),
                   Text(
-                    state.counter.toString(),
-                    style: const TextStyle(
-                        // color: Colors.green,
+                    globals.counter.toString(),
+                    style: TextStyle(
+                        color: isDark ? darkAppTextColor : lithAppTextColor,
                         // fontWeight: FontWeight.bold,
                         fontSize: 22.0),
                   ),
@@ -87,38 +94,46 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.grey.shade100,
-                            Colors.grey.shade100,
+                            isDark ? darkAppColors : lithAppColors,
+                            isDark ? darkAppColors : lithAppColors,
                           ],
                         ),
                         boxShadow: !state.buttonReverse
                             ? [
-                                const BoxShadow(
-                                  color: Color(0xffccd0d3),
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowBottom
+                                      : lithAppShadowBottom,
                                   spreadRadius: 2,
                                   blurRadius: 2,
-                                  offset: Offset(3, 3),
+                                  offset: const Offset(3, 3),
                                 ),
-                                const BoxShadow(
-                                  color: Colors.white,
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowTop
+                                      : lithAppShadowTop,
                                   spreadRadius: 1,
                                   blurRadius: 2,
-                                  offset: Offset(-3, -3),
+                                  offset: const Offset(-3, -3),
                                 ),
                               ]
                             : [
-                                const BoxShadow(
-                                  color: Color(0xffffffff),
-                                  offset: Offset(-3, -3),
-                                  blurRadius: 1,
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowTop
+                                      : lithAppShadowTop,
+                                  offset: const Offset(-4, -4),
+                                  blurRadius: 4,
                                   spreadRadius: 2,
                                   inset: true,
                                 ),
-                                const BoxShadow(
-                                  color: Color(0xffccd0d3),
-                                  offset: Offset(3, 3),
-                                  blurRadius: 1,
-                                  spreadRadius: 2,
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowBottom
+                                      : lithAppShadowBottom,
+                                  offset: const Offset(1, 1),
+                                  blurRadius: 2,
+                                  spreadRadius: 3,
                                   inset: true,
                                 ),
                               ],
@@ -128,6 +143,7 @@ class _HeaderCounterWidgetState extends State<HeaderCounterWidget> {
                       'assets/icon/rotate.svg',
                       width: 22,
                       height: 22,
+                      color: isDark ? darkAppTextColor : lithAppTextColor,
                     ),
                   ],
                 ),

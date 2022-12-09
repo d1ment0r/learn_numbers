@@ -1,3 +1,4 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:learn_numbers/core/speech.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:learn_numbers/models/language.dart';
+import 'package:learn_numbers/themes/theme.dart';
 import 'package:number_to_words/number_to_words.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:developer' as developer;
@@ -41,6 +43,12 @@ class _LearningScreenState extends State<LearningScreen>
     controller.repeat(reverse: true);
     fillArrayNumbers();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,6 +123,9 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   GestureDetector buttonAddZeroWidget() {
+    // Темная тема
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return GestureDetector(
       onTap: () {
         setState(
@@ -138,36 +149,36 @@ class _LearningScreenState extends State<LearningScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.grey.shade100,
-              Colors.grey.shade100,
+              isDark ? darkAppColors : lithAppColors,
+              isDark ? darkAppColors : lithAppColors,
             ],
           ),
           boxShadow: !_isElevated
               ? [
-                  const BoxShadow(
-                    color: Color(0xffccd0d3),
+                  BoxShadow(
+                    color: isDark ? darkAppShadowBottom : lithAppShadowBottom,
                     spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(4, 4),
+                    blurRadius: 6,
+                    offset: const Offset(4, 4),
                   ),
-                  const BoxShadow(
-                    color: Colors.white,
+                  BoxShadow(
+                    color: isDark ? darkAppShadowTop : lithAppShadowTop,
                     spreadRadius: 1,
                     blurRadius: 5,
-                    offset: Offset(-4, -4),
+                    offset: const Offset(-3, -3),
                   ),
                 ]
               : [
-                  const BoxShadow(
-                    color: Color(0xffffffff),
-                    offset: Offset(-4, -4),
+                  BoxShadow(
+                    color: isDark ? darkAppShadowTop : lithAppShadowTop,
+                    offset: const Offset(-4, -4),
                     blurRadius: 5,
                     spreadRadius: 1,
                     inset: true,
                   ),
-                  const BoxShadow(
-                    color: Color(0xffccd0d3),
-                    offset: Offset(4, 4),
+                  BoxShadow(
+                    color: isDark ? darkAppShadowBottom : lithAppShadowBottom,
+                    offset: const Offset(4, 4),
                     blurRadius: 5,
                     spreadRadius: 1,
                     inset: true,
@@ -176,10 +187,14 @@ class _LearningScreenState extends State<LearningScreen>
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               '0',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w600,
+                color: isDark ? darkAppTextColor : lithAppTextColor,
+              ),
             ),
           ],
         ),
@@ -188,13 +203,18 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   Flexible searchFieldWidget() {
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return Flexible(
       child: TextField(
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         controller: searchController,
         keyboardType: TextInputType.number,
         maxLength: 5,
-        style: const TextStyle(fontSize: 18.0),
+        style: TextStyle(
+          fontSize: 18.0,
+          color: isDark ? darkAppTextColor : lithAppTextColor,
+        ),
         decoration: InputDecoration(
           // отключает счетчик введённых цифр
           // counter: const Offstage(),
@@ -232,6 +252,8 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   GestureDetector rowNumbersWidget(int step) {
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return GestureDetector(
       onTap: () {
         if (globals.voice != null && globals.voice != '') {
@@ -256,7 +278,10 @@ class _LearningScreenState extends State<LearningScreen>
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Text(
                     arrayNumbers[step].toString().padLeft(3, ' '),
-                    style: const TextStyle(fontSize: 18.0),
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: isDark ? darkAppTextColor : lithAppTextColor,
+                    ),
                     // textAlign: TextAlign.left,
                   ),
                 ),
@@ -267,7 +292,10 @@ class _LearningScreenState extends State<LearningScreen>
                 arrayNumbers[step] < 1000
                     ? globals.sortingMap[arrayNumbers[step]]
                     : customTranslate,
-                style: const TextStyle(fontSize: 20.0),
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: isDark ? darkAppTextColor : lithAppTextColor,
+                ),
                 textAlign: TextAlign.left,
               ),
             ),
@@ -283,36 +311,71 @@ class _LearningScreenState extends State<LearningScreen>
   }
 
   Stack buttonSpeechNumer(int step) {
-    return Stack(
-      alignment: AlignmentDirectional.center,
-      children: [
-        const SizedBox(
-          width: 30,
-          height: 30,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 3,
-            top: 5,
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
+    return Stack(alignment: AlignmentDirectional.center, children: [
+      AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        width: _speechButtonOn && step == _currentStep ? 27 : 24,
+        height: _speechButtonOn && step == _currentStep ? 27 : 24,
+        margin: EdgeInsets.only(
+            top: _speechButtonOn && step == _currentStep ? 0.0 : 3.0,
+            bottom: 3.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              isDark ? darkAppColors : lithAppColors,
+              isDark ? darkAppColors : lithAppColors,
+            ],
           ),
-          child: SvgPicture.asset(
-            'assets/icon/sound_on.svg',
-            width: 22,
-            height: 22,
-            color: _speechButtonOn && step == _currentStep
-                ? Colors.grey.shade200
-                : Colors.grey.shade400,
-          ),
+          boxShadow: _speechButtonOn && step == _currentStep
+              ? [
+                  BoxShadow(
+                    color: isDark ? darkAppShadowTop : lithAppShadowTop,
+                    offset: const Offset(-3, -3),
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                    inset: true,
+                  ),
+                  BoxShadow(
+                    color: isDark ? darkAppShadowBottom : lithAppShadowBottom,
+                    offset: const Offset(3, 3),
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                    inset: true,
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: isDark ? darkAppShadowBottom : lithAppShadowBottom,
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(3, 3),
+                  ),
+                  BoxShadow(
+                    color: isDark ? darkAppShadowTop : lithAppShadowTop,
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(-3, -3),
+                  ),
+                ],
+          // :
         ),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          child: SvgPicture.asset('assets/icon/sound_on.svg',
-              width: _speechButtonOn && step == _currentStep ? 24 : 20,
-              height: _speechButtonOn && step == _currentStep ? 24 : 20,
-              color: Colors.black),
-        ),
-      ],
-    );
+      ),
+      SvgPicture.asset(
+        'assets/icon/sound_on.svg',
+        // width: _speechButtonOn && step == _currentStep ? 10 : 10,
+        // height: _speechButtonOn && step == _currentStep ? 10 : 10,
+        height: 16,
+        width: 16,
+        color: isDark ? darkAppTextColor : lithAppTextColor,
+      ),
+    ]);
+    //   ],
+    // );
   }
 
   void searchNumber(String query) {
@@ -357,12 +420,6 @@ class _LearningScreenState extends State<LearningScreen>
     globals.sortingMap.forEach((key, value) {
       arrayNumbers.add(key);
     });
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 }
 

@@ -1,8 +1,10 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:learn_numbers/themes/theme.dart';
 
 import '../bloc/bloc.dart';
 import '../bloc/state.dart';
@@ -20,7 +22,8 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
     // Full screen width
     double width = MediaQuery.of(context).size.width;
     double leftPaddingValue = width / 6;
-
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return Flexible(
       child: BlocConsumer<AppBlocBloc, AppState>(
         listener: (context, state) {},
@@ -53,21 +56,24 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.grey.shade100,
-                              Colors.grey.shade100,
+                              isDark ? darkAppColors : lithAppColors,
+                              isDark ? darkAppColors : lithAppColors,
                             ],
                           ),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
-                              color: Color(0xffffffff),
-                              offset: Offset(-12, -12),
+                              color:
+                                  isDark ? darkAppShadowTop : lithAppShadowTop,
+                              offset: const Offset(-12, -12),
                               blurRadius: 15,
                               spreadRadius: 0.0,
                               inset: true,
                             ),
                             BoxShadow(
-                              color: Color(0xffccd0d3),
-                              offset: Offset(12, 12),
+                              color: isDark
+                                  ? darkAppShadowBottom
+                                  : lithAppShadowBottom,
+                              offset: const Offset(12, 12),
                               blurRadius: 15,
                               spreadRadius: 0.0,
                               inset: true,
@@ -91,20 +97,23 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.grey.shade100,
-                              Colors.grey.shade100,
+                              isDark ? darkAppColors : lithAppColors,
+                              isDark ? darkAppColors : lithAppColors,
                             ],
                           ),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
-                              color: Color(0xffffffff),
-                              offset: Offset(-4, -4),
+                              color:
+                                  isDark ? darkAppShadowTop : lithAppShadowTop,
+                              offset: const Offset(-4, -4),
                               blurRadius: 5,
                               spreadRadius: 0.0,
                             ),
                             BoxShadow(
-                              color: Color(0xffccd0d3),
-                              offset: Offset(4, 4),
+                              color: isDark
+                                  ? darkAppShadowBottom
+                                  : lithAppShadowBottom,
+                              offset: const Offset(4, 4),
                               blurRadius: 5,
                               spreadRadius: 0.0,
                             ),
@@ -123,11 +132,11 @@ class _SwitchSoundWidgetState extends State<SwitchSoundWidget> {
                         child: globals.soundOn && globals.voice != null
                             ? SvgPicture.asset(
                                 'assets/icon/sound_on.svg',
-                                color: Colors.black,
+                                color: !isDark ? darkAppColors : lithAppColors,
                               )
                             : SvgPicture.asset(
                                 'assets/icon/sound_off.svg',
-                                color: Colors.black,
+                                color: !isDark ? darkAppColors : lithAppColors,
                               ),
                       )
                     ],

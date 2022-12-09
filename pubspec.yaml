@@ -54,6 +54,8 @@ dependencies:
   flutter_linkify: ^5.0.2
   url_launcher: ^6.1.7
   rename: ^2.0.1
+  shared_preferences: ^2.0.15
+  animated_theme_switcher: ^2.0.7
   
 
 dev_dependencies:

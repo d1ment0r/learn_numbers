@@ -1,9 +1,11 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
 import 'package:learn_numbers/models/globals.dart' as globals;
+import 'package:learn_numbers/themes/theme.dart';
 
 class TargetTextWinget extends StatelessWidget {
   const TargetTextWinget({
@@ -17,6 +19,8 @@ class TargetTextWinget extends StatelessWidget {
     if (height < 600) {
       resize = 0.65;
     }
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -37,16 +41,17 @@ class TargetTextWinget extends StatelessWidget {
                     : globals.sortingMap[state.target],
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  color: isDark ? darkAppTextColor : lithAppTextColor,
                   fontSize: state.page == 1
                       ? state.buttonReverse
-                          ? 110.0 * resize // число первый экран
-                          : 65.0 * resize // слово первый экран
+                          ? 100.0 * resize // число первый экран
+                          : 50.0 * resize // слово первый экран
                       : state.page == 2
                           ? state.buttonReverse
-                              ? 120.0 * resize // число второй экран
-                              : 55.0 * resize // слово второй экран
+                              ? 100.0 * resize // число второй экран
+                              : 45.0 * resize // слово второй экран
                           : state.buttonReverse
-                              ? 120.0 * resize // число третий экран
+                              ? 100.0 * resize // число третий экран
                               : 40.0 * resize, // слово третий экран
                 ),
               ),

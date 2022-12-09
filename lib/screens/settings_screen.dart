@@ -3,13 +3,16 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer' as console;
 import 'dart:io';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:learn_numbers/core/theme_service.dart';
 import 'package:learn_numbers/db/database.dart';
 import 'package:learn_numbers/models/language.dart';
+import 'package:learn_numbers/themes/theme.dart';
 import 'package:number_to_words/number_to_words.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -18,7 +21,7 @@ import 'package:text_to_speech/text_to_speech.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'main_screen.dart';
+import 'app_screen.dart';
 
 TextToSpeech tts = TextToSpeech();
 
@@ -51,6 +54,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   List<Language> languages = [];
 
   bool _languageChange = false;
+  int tempCurrentPage = globals.currentPage;
 
   @override
   void initState() {
@@ -97,7 +101,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                  builder: (context) => MainScreen(
+                  builder: (context) => AppScreen(
                         title: _currentLanguage.name,
                       )),
               (Route route) => false);
@@ -111,11 +115,12 @@ class _CSettingsScreenState extends State<SettingsScreen> {
             // ignore: use_build_context_synchronously
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                    builder: (context) => MainScreen(
+                    builder: (context) => AppScreen(
                           title: _currentLanguage.name,
                         )),
                 (Route route) => false);
           } else {
+            // globals.currentPage = tempCurrentPage;
             // ignore: use_build_context_synchronously
             Navigator.pop(context);
           }
@@ -143,129 +148,175 @@ class _CSettingsScreenState extends State<SettingsScreen> {
         _isElevated = false;
       });
     }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: const Color(0xFF3399CC),
-      ),
-      backgroundColor: Colors.grey[100],
-      body: Padding(
-        padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 10.0),
-        child: Column(
-          children: [
-            choiseLanguageWidget(),
-            rowVoiceAndLanguage(),
-            rowVolumeWidget(),
-            rowRateWidget(),
-            rowPitchWidget(),
-            // Кнопки
-            Expanded(
-              child: Align(
-                  alignment: Alignment.center,
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
+    return ThemeSwitchingArea(
+      child: Scaffold(
+        backgroundColor: isDark ? darkAppColors : lithAppColors,
+        appBar: AppBar(
+          title: const Text('Settings'),
+          actions: [
+            ThemeSwitcher(builder: (context) {
+              return IconButton(
+                onPressed: () async {
+                  var themeName = ThemeModelInheritedNotifier.of(context)
+                              .theme
+                              .brightness ==
+                          Brightness.light
+                      ? 'dark'
+                      : 'light';
+                  var service = await ThemeService.instance
+                    ..save(themeName);
+                  var theme = service.getByName(themeName);
+                  // ignore: use_build_context_synchronously
+                  ThemeSwitcher.of(context).changeTheme(theme: theme);
+                },
+                icon:
+                    ThemeModelInheritedNotifier.of(context).theme.brightness ==
+                            Brightness.light
+                        ? const Icon(
+                            Icons.sunny,
+                            size: 25,
+                          )
+                        : const Icon(
+                            Icons.brightness_3,
+                            size: 25,
+                          ),
+              );
+            })
+          ],
+        ),
+        // backgroundColor: Theme.of(context).primaryColor,
+        body: Padding(
+          padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 10.0),
+          child: Column(
+            children: [
+              choiseLanguageWidget(),
+              rowVoiceAndLanguage(),
+              rowVolumeWidget(),
+              rowRateWidget(),
+              rowPitchWidget(),
+              // Кнопки
+              Expanded(
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        !_iAmCreater
+                            ? GestureDetector(
+                                onTap: () async {
+                                  await DBProvider.db
+                                      .updateSettins(_selectedLanguage);
+                                  setState(() {
+                                    _languageChange =
+                                        _currentLanguage != _selectedLanguage;
+                                    _isElevated = !_isElevated;
+                                  });
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 200));
+                                  initializationApp();
+                                },
+                                child: Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    AnimatedContainer(
+                                      duration:
+                                          const Duration(microseconds: 200),
+                                      height: 60.0,
+                                      width: 60.0,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            isDark
+                                                ? darkAppColors
+                                                : lithAppColors,
+                                            isDark
+                                                ? darkAppColors
+                                                : lithAppColors,
+                                          ],
+                                        ),
+                                        boxShadow: !_isElevated
+                                            ? [
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? darkAppShadowBottom
+                                                      : lithAppShadowBottom,
+                                                  spreadRadius: 1,
+                                                  blurRadius: 5,
+                                                  offset: const Offset(4, 4),
+                                                ),
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? darkAppShadowTop
+                                                      : lithAppShadowTop,
+                                                  spreadRadius: 1,
+                                                  blurRadius: 5,
+                                                  offset: const Offset(-4, -4),
+                                                ),
+                                              ]
+                                            : [
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? darkAppShadowTop
+                                                      : lithAppShadowTop,
+                                                  offset: const Offset(-4, -4),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                  inset: true,
+                                                ),
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? darkAppShadowBottom
+                                                      : lithAppShadowBottom,
+                                                  offset: const Offset(4, 4),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                  inset: true,
+                                                ),
+                                              ],
+                                      ),
+                                    ),
+                                    SvgPicture.asset('assets/icon/ok_bold.svg',
+                                        width: 40,
+                                        height: 40,
+                                        color: Colors.green),
+                                  ],
+                                ),
+                              )
+                            // Кнопка, только для меня
+                            : buttonOnlyForCreater(),
+                      ],
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 25.0),
+                child: GestureDetector(
+                  onTap: () {
+                    _launchUrl();
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      !_iAmCreater
-                          ? GestureDetector(
-                              onTap: () async {
-                                await DBProvider.db
-                                    .updateSettins(_selectedLanguage);
-                                setState(() {
-                                  _languageChange =
-                                      _currentLanguage != _selectedLanguage;
-                                  _isElevated = !_isElevated;
-                                });
-                                await Future.delayed(
-                                    const Duration(milliseconds: 200));
-                                initializationApp();
-                              },
-                              child: Stack(
-                                alignment: AlignmentDirectional.center,
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(microseconds: 200),
-                                    height: 60.0,
-                                    width: 60.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          Colors.grey.shade100,
-                                          Colors.grey.shade100,
-                                        ],
-                                      ),
-                                      boxShadow: !_isElevated
-                                          ? [
-                                              const BoxShadow(
-                                                color: Color(0xffccd0d3),
-                                                spreadRadius: 2,
-                                                blurRadius: 5,
-                                                offset: Offset(4, 4),
-                                              ),
-                                              const BoxShadow(
-                                                color: Colors.white,
-                                                spreadRadius: 1,
-                                                blurRadius: 5,
-                                                offset: Offset(-4, -4),
-                                              ),
-                                            ]
-                                          : [
-                                              const BoxShadow(
-                                                color: Color(0xffffffff),
-                                                offset: Offset(-4, -4),
-                                                blurRadius: 5,
-                                                spreadRadius: 1,
-                                                inset: true,
-                                              ),
-                                              const BoxShadow(
-                                                color: Color(0xffccd0d3),
-                                                offset: Offset(4, 4),
-                                                blurRadius: 5,
-                                                spreadRadius: 1,
-                                                inset: true,
-                                              ),
-                                            ],
-                                    ),
-                                  ),
-                                  SvgPicture.asset('assets/icon/ok_bold.svg',
-                                      width: 40,
-                                      height: 40,
-                                      color: Colors.green),
-                                ],
-                              ),
-                            )
-                          // Кнопка, только для меня
-                          : buttonOnlyForCreater(),
+                      Icon(
+                        Icons.copyright,
+                        size: 14.0,
+                        color: Colors.blue.shade800,
+                      ),
+                      Text(
+                        '  dmitrii.online',
+                        style: TextStyle(
+                            fontSize: 16.0, color: Colors.blue.shade800),
+                      )
                     ],
-                  )),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 25.0),
-              child: GestureDetector(
-                onTap: () {
-                  _launchUrl();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.copyright,
-                      size: 14.0,
-                      color: Colors.blue.shade800,
-                    ),
-                    Text(
-                      '  dmitrii.online',
-                      style: TextStyle(
-                          fontSize: 16.0, color: Colors.blue.shade800),
-                    )
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -304,6 +355,8 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   }
 
   GestureDetector buttonOnlyForCreater() {
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return GestureDetector(
       onTap: () async {
         setState(() {
@@ -335,14 +388,16 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                 ),
                 boxShadow: !_pressButtonCreater
                     ? [
-                        const BoxShadow(
-                          color: Color(0xffccd0d3),
+                        BoxShadow(
+                          color: isDark
+                              ? darkAppShadowBottom
+                              : lithAppShadowBottom,
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(4, 4),
+                          offset: const Offset(4, 4),
                         ),
-                        const BoxShadow(
-                          color: Colors.white,
+                        BoxShadow(
+                          color: isDark ? darkAppShadowTop : lithAppShadowTop,
                           spreadRadius: 1,
                           blurRadius: 5,
                           offset: Offset(-4, -4),
@@ -356,8 +411,8 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                           spreadRadius: 1,
                           inset: true,
                         ),
-                        const BoxShadow(
-                          color: Color(0xffccd0d3),
+                        BoxShadow(
+                          color: isDark ? darkAppShadowTop : lithAppShadowTop,
                           offset: Offset(4, 4),
                           blurRadius: 5,
                           spreadRadius: 1,
@@ -398,31 +453,33 @@ class _CSettingsScreenState extends State<SettingsScreen> {
   }
 
   Container choiseLanguageWidget() {
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return Container(
       width: 600,
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      margin: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.grey.shade100,
-              Colors.grey.shade100,
+              isDark ? darkAppColors : lithAppColors,
+              isDark ? darkAppColors : lithAppColors,
             ],
           ),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Color(0xffccd0d3),
-              spreadRadius: 1,
+              color: isDark ? darkAppShadowBottom : lithAppShadowBottom,
+              spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(4, 4),
+              offset: const Offset(5, 5),
             ),
             BoxShadow(
-              color: Colors.white,
+              color: isDark ? darkAppShadowTop : lithAppShadowTop,
               spreadRadius: 1,
               blurRadius: 5,
-              offset: Offset(-4, -4),
+              offset: const Offset(-4, -4),
             ),
           ]),
       child: DropdownButtonHideUnderline(

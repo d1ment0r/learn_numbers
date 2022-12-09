@@ -1,3 +1,4 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,8 @@ import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'dart:developer' as developer;
+
+import 'package:learn_numbers/themes/theme.dart';
 
 class ButtonHelpWidget extends StatefulWidget {
   const ButtonHelpWidget({
@@ -32,7 +35,8 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
     double height = MediaQuery.of(context).size.height;
     developer.log('width screen: $width height: $height');
     double rigthPaddingValue = width / 18;
-
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return Flexible(
       child: BlocConsumer<AppBlocBloc, AppState>(
         listener: (context, state) {},
@@ -61,36 +65,44 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.grey.shade100,
-                            Colors.grey.shade100,
+                            isDark ? darkAppColors : lithAppColors,
+                            isDark ? darkAppColors : lithAppColors,
                           ],
                         ),
                         boxShadow: !_isElevated
                             ? [
-                                const BoxShadow(
-                                  color: Color(0xffccd0d3),
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowBottom
+                                      : lithAppShadowBottom,
                                   spreadRadius: 2,
                                   blurRadius: 5,
-                                  offset: Offset(4, 4),
+                                  offset: const Offset(4, 4),
                                 ),
-                                const BoxShadow(
-                                  color: Colors.white,
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowTop
+                                      : lithAppShadowTop,
                                   spreadRadius: 1,
                                   blurRadius: 5,
-                                  offset: Offset(-4, -4),
+                                  offset: const Offset(-4, -4),
                                 ),
                               ]
                             : [
-                                const BoxShadow(
-                                  color: Color(0xffffffff),
-                                  offset: Offset(-4, -4),
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowTop
+                                      : lithAppShadowTop,
+                                  offset: const Offset(-4, -4),
                                   blurRadius: 5,
                                   spreadRadius: 1,
                                   inset: true,
                                 ),
-                                const BoxShadow(
-                                  color: Color(0xffccd0d3),
-                                  offset: Offset(4, 4),
+                                BoxShadow(
+                                  color: isDark
+                                      ? darkAppShadowBottom
+                                      : lithAppShadowBottom,
+                                  offset: const Offset(4, 4),
                                   blurRadius: 5,
                                   spreadRadius: 1,
                                   inset: true,
@@ -102,6 +114,7 @@ class _ButtonHelpWidgetState extends State<ButtonHelpWidget> {
                       'assets/icon/help_ok.svg',
                       width: 25,
                       height: 25,
+                      color: isDark ? lithAppShadowBottom : darkAppColors,
                     ),
                   ],
                 ),

@@ -2,6 +2,8 @@ library globals;
 
 import 'dart:collection';
 
+import 'package:learn_numbers/bloc/state.dart';
+import 'package:learn_numbers/models/choise.dart';
 import 'package:learn_numbers/models/language.dart';
 
 SplayTreeMap sortingMap = SplayTreeMap<int, String>();
@@ -9,6 +11,11 @@ bool reversMap = false;
 bool soundOn = true;
 bool splashScreenOn = true;
 int currentPage = 1;
+
+// Set counter
+int counter = 0;
+int wrong = 0;
+int good = 0;
 
 // Settings Speech
 double volume = 1; // Range: 0-1
@@ -22,6 +29,9 @@ Language currentLanguage = Language.getDefault();
 int totalAnswers = 0;
 int totalTrueAnswers = 0;
 int totalFalseAnswers = 0;
+
+// Set State
+List<Choise?> stateChoise = [null, null, null];
 
 // Colors message in console debug
 // Text

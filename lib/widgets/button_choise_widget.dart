@@ -1,9 +1,11 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:learn_numbers/models/globals.dart' as globals;
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_numbers/bloc/bloc.dart';
 import 'package:learn_numbers/bloc/state.dart';
+import 'package:learn_numbers/models/translate.dart';
+import 'package:learn_numbers/themes/theme.dart';
 
 // Кнопка выбора варианта ответа
 // При нажатии генерирует событие PressButtonChoiseEvent
@@ -23,6 +25,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
   bool isRedButton = false;
   bool isGreenButton = false;
   bool _isElevated = false;
+  Translate translate = const Translate();
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +34,12 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
     if (height < 600) {
       resize = 0.7;
     }
+    bool isDark = ThemeModelInheritedNotifier.of(context).theme.brightness ==
+        Brightness.dark;
     return BlocConsumer<AppBlocBloc, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
+        int currentNumber = state.listButton[widget.number];
         isRedButton = state.buttonChoise == widget.number &&
             state.buttonChoise != state.truePosition &&
             state.buttomPressed;
@@ -60,36 +66,40 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.grey.shade100,
-                    Colors.grey.shade100,
+                    isDark ? darkAppColors : lithAppColors,
+                    isDark ? darkAppColors : lithAppColors,
                   ],
                 ),
                 boxShadow: !_isElevated
                     ? [
-                        const BoxShadow(
-                          color: Color(0xffccd0d3),
-                          spreadRadius: 1,
+                        BoxShadow(
+                          color: isDark
+                              ? darkAppShadowBottom
+                              : lithAppShadowBottom,
+                          spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(4, 4),
+                          offset: const Offset(4, 4),
                         ),
-                        const BoxShadow(
-                          color: Colors.white,
+                        BoxShadow(
+                          color: isDark ? darkAppShadowTop : lithAppShadowTop,
                           spreadRadius: 1,
                           blurRadius: 5,
-                          offset: Offset(-4, -4),
+                          offset: const Offset(-4, -4),
                         ),
                       ]
                     : [
-                        const BoxShadow(
-                          color: Color(0xffffffff),
-                          offset: Offset(-4, -4),
+                        BoxShadow(
+                          color: isDark ? darkAppShadowTop : lithAppShadowTop,
+                          offset: const Offset(-4, -4),
                           blurRadius: 5,
                           spreadRadius: 1,
                           inset: true,
                         ),
-                        const BoxShadow(
-                          color: Color(0xffccd0d3),
-                          offset: Offset(4, 4),
+                        BoxShadow(
+                          color: isDark
+                              ? darkAppShadowBottom
+                              : lithAppShadowBottom,
+                          offset: const Offset(4, 4),
                           blurRadius: 5,
                           spreadRadius: 1,
                           inset: true,
@@ -105,16 +115,17 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                     Flexible(
                       child: Text(
                         state.buttonReverse
-                            ? globals
-                                .sortingMap[state.listButton[widget.number]]
-                            : state.listButton[widget.number].toString(),
+                            ? translate.getByNumer(number: currentNumber)
+                            : currentNumber.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: isGreenButton
                                 ? Colors.green
                                 : isRedButton
                                     ? Colors.red
-                                    : Colors.black,
+                                    : isDark
+                                        ? darkAppTextColor
+                                        : lithAppTextColor,
                             fontSize: state.page == 1
                                 ? !state.buttonReverse
                                     ? 30.0 * resize
@@ -127,7 +138,7 @@ class _ButtonChoiseWidgetState extends State<ButtonChoiseWidget> {
                                         ? 30.0 * resize
                                         : 18.0 * resize,
                             fontWeight: state.buttonReverse
-                                ? FontWeight.w500
+                                ? FontWeight.w600
                                 : FontWeight.w700),
                       ),
                     ),
