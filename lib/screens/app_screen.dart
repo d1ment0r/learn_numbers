@@ -40,7 +40,6 @@ class _AppScreenState extends State<AppScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(widget.title),
         // backgroundColor: const Color(0xFF3399CC),
@@ -82,7 +81,7 @@ class _AppScreenState extends State<AppScreen> {
   BottomNavigationBar _bottomNavigationBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      currentIndex: _currentPage ?? 0,
+      currentIndex: _currentPage,
       items: bottomNavigationBarItems,
       showSelectedLabels: false,
       showUnselectedLabels: false,

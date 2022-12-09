@@ -236,13 +236,13 @@ class _LearningScreenState extends State<LearningScreen>
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
-              color: Colors.grey.shade600,
+              color: isDark ? darkAppTextColor : lithAppTextColor,
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color(0xFF3399CC),
+            borderSide: BorderSide(
+              color: isDark ? darkAppTextColor : lithAppTextColor,
             ),
           ),
         ),
@@ -429,6 +429,5 @@ Divider dividerWidget() {
     indent: 20.0,
     endIndent: 20.0,
     thickness: 1,
-    color: Color(0xFF3399CC),
   );
 }

@@ -16,8 +16,4 @@ class Choise extends Equatable {
 
   @override
   List<Object?> get props => [target];
-
-  getEmpty() {
-    print('choise enpty');
-  }
 }

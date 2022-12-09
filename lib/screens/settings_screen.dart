@@ -152,7 +152,6 @@ class _CSettingsScreenState extends State<SettingsScreen> {
         Brightness.dark;
     return ThemeSwitchingArea(
       child: Scaffold(
-        backgroundColor: isDark ? darkAppColors : lithAppColors,
         appBar: AppBar(
           title: const Text('Settings'),
           actions: [
@@ -400,7 +399,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                           color: isDark ? darkAppShadowTop : lithAppShadowTop,
                           spreadRadius: 1,
                           blurRadius: 5,
-                          offset: Offset(-4, -4),
+                          offset: const Offset(-4, -4),
                         ),
                       ]
                     : [
@@ -413,7 +412,7 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                         ),
                         BoxShadow(
                           color: isDark ? darkAppShadowTop : lithAppShadowTop,
-                          offset: Offset(4, 4),
+                          offset: const Offset(4, 4),
                           blurRadius: 5,
                           spreadRadius: 1,
                           inset: true,
