@@ -128,6 +128,7 @@ class _LearningScreenState extends State<LearningScreen>
         Brightness.dark;
     return GestureDetector(
       onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
         setState(
           () {
             if (searchController.text.length < 5) {
@@ -256,6 +257,7 @@ class _LearningScreenState extends State<LearningScreen>
         Brightness.dark;
     return GestureDetector(
       onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
         if (globals.voice != null && globals.voice != '') {
           developer.log(arrayNumbers[step].toString());
           setState(() {

@@ -26,6 +26,7 @@ class _ChoiseScreenState extends State<ChoiseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FocusManager.instance.primaryFocus?.unfocus();
     return BlocProvider(
       create: (context) => AppBlocBloc(page: widget.page),
       child: Center(
