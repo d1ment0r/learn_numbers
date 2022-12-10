@@ -4,18 +4,18 @@ ThemeData lightTheme = ThemeData.light().copyWith(
   scaffoldBackgroundColor: lithAppColors,
   colorScheme: const ColorScheme.light(
     brightness: Brightness.light,
-    primary: Color(0xFF3399cc),
+    primary: Color(0xFF38637b),
 
     onPrimary: Colors.white,
     // цвет текста AppBar
     onSurface: Colors.white60,
     // фон AppBar
-    surface: Color(0xFF3399CC),
+    surface: Color(0xFFba2649),
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: Color(0xFF006a9b),
-    selectedItemColor: Colors.white70,
-    unselectedItemColor: Colors.black87,
+    backgroundColor: Color(0xFF6790aa),
+    selectedItemColor: Colors.white,
+    unselectedItemColor: Colors.black54,
   ),
   dividerTheme: const DividerThemeData(
     color: Color(0xFF3399CC),
@@ -31,14 +31,14 @@ Color lithAppTextColor = const Color(0xff333333);
 
 ThemeData darkTheme = ThemeData(
   appBarTheme: AppBarTheme(
-    backgroundColor: const Color(0xFF424242),
+    backgroundColor: const Color(0xFF1b1b1b),
     iconTheme: const IconThemeData(color: Colors.white70),
     elevation: 5.0,
     shadowColor: darkAppColors,
   ),
   scaffoldBackgroundColor: darkAppColors,
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: Color(0xFF1b1b1b),
+    backgroundColor: Color(0xFF424242),
     selectedItemColor: Colors.white70,
     unselectedItemColor: Colors.white38,
   ),
