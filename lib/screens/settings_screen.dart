@@ -291,8 +291,9 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                       ],
                     )),
               ),
+              const Divider(thickness: 1.0),
               Padding(
-                padding: const EdgeInsets.only(bottom: 25.0),
+                padding: const EdgeInsets.only(top: 5.0, bottom: 25.0),
                 child: GestureDetector(
                   onTap: () {
                     _launchUrl();
@@ -313,7 +314,6 @@ class _CSettingsScreenState extends State<SettingsScreen> {
                           fontSize: 16.0,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 2.0,
-                          decoration: TextDecoration.underline,
                         ),
                       )
                     ],
