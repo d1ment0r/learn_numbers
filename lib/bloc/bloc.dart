@@ -1,111 +1,110 @@
-import 'dart:async';
-import 'dart:developer' as developer;
+import 'dart:developer' as console;
+import 'package:learn_numbers/models/globals.dart' as globals;
 
-import 'package:audioplayers/audioplayers.dart';
-// import 'package:audioplayers/audio_cache.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'state.dart';
 part 'event.dart';
 
 class AppBlocBloc extends Bloc<AppEvent, AppState> {
   int page;
-  List<AudioPlayer> players =
-      List.generate(2, (_) => AudioPlayer()..setReleaseMode(ReleaseMode.stop));
-  int selectedPlayerIdx = 0;
-
-  AudioPlayer get selectedPlayer => players[selectedPlayerIdx];
-  List<StreamSubscription> streams = [];
 
   AppBlocBloc({
     required this.page,
-  }) : super(AppState.update(
-          page: page,
-          counter: 0,
-          wrong: 0,
-          good: 0,
-          target: 0,
-          buttomPressed: false,
-          buttonHelpPressed: false,
-          truePosition: 0,
-        )) {
+  }) : super(
+          AppState.init(
+            page: page,
+          ),
+        ) {
     on<PressButtonChoiseEvent>((event, emit) {
-      developer.log('Event - PressButtonChoiseEvent');
-      state.counter++;
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mPressButtonChoiseEvent');
+      globals.counter++;
       state.buttomPressed = true;
       state.buttonChoise = event.choise;
       if (event.choise == state.truePosition) {
-        state.good++;
-
-        AudioPlayer(playerId: '/assets/sound/correct.mp3').audioCache;
+        globals.good++;
       } else {
-        state.wrong++;
-        AudioPlayer(playerId: '/assets/sound/error-2.mp3').audioCache;
+        globals.wrong++;
       }
-      // emit(AppState.update(
-      //   page: state.page,
-      //   counter: state.counter,
-      //   wrong: state.wrong,
-      //   good: state.good,
-      //   buttomPressed: false,
-      //   target: state.target,
-      //   truePosition: state.truePosition,
-      //   buttonHelpPressed: true,
-      // ));
       emit(AppState(
-        counter: state.counter,
         buttomPressed: true,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
-        wrong: state.wrong,
-        good: state.good,
+        buttonReverse: globals.reversMap,
+        soundOn: globals.soundOn,
         target: state.target,
         page: state.page,
         truePosition: state.truePosition,
-        textButton: state.textButton,
+        listButton: state.listButton,
       ));
     });
+
     on<PressButtonHelpEvent>((event, emit) {
       state.buttonHelpPressed = true;
-      developer.log('Event - PressButtonHelpEvent');
-      emit(AppState(
-        counter: state.counter,
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mPressButtonHelpEvent');
+      emit(AppState.speech(
         buttomPressed: false,
         buttonHelpPressed: true,
         buttonChoise: state.buttonChoise,
-        wrong: state.wrong,
-        good: state.good,
+        buttonReverse: state.buttonReverse,
+        soundOn: globals.soundOn,
         target: state.target,
         page: state.page,
         truePosition: state.truePosition,
-        textButton: state.textButton,
+        listButton: state.listButton,
       ));
     });
+
+    on<ChangeSoundStateEvent>((event, emit) {
+      if (globals.soundOn) {
+        console.log(
+            '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mChangeSoundStateEvent, sound: on');
+      } else {
+        console.log(
+            '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mChangeSoundStateEvent, sound: off');
+      }
+      emit(AppState.speech(
+        buttomPressed: state.buttomPressed,
+        buttonHelpPressed: state.buttonHelpPressed,
+        buttonChoise: state.buttonChoise,
+        buttonReverse: state.buttonReverse,
+        soundOn: globals.soundOn,
+        target: state.target,
+        page: state.page,
+        truePosition: state.truePosition,
+        listButton: state.listButton,
+      ));
+    });
+
+    on<PressButtonReversEvent>((event, emit) {
+      globals.reversMap = !globals.reversMap;
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mPressButtonHelpEvent');
+      emit(AppState(
+        buttomPressed: state.buttomPressed,
+        buttonHelpPressed: state.buttonHelpPressed,
+        buttonChoise: state.buttonChoise,
+        buttonReverse: globals.reversMap,
+        soundOn: globals.soundOn,
+        target: state.target,
+        page: state.page,
+        truePosition: state.truePosition,
+        listButton: state.listButton,
+      ));
+    });
+
     on<UpdateScreenEvent>((event, emit) {
       state.buttomPressed = false;
-      developer.log('Event - UpdateScreenEvent');
+      console.log(
+          '\u001b[1;33mBloc: \u001b[0mevent \u001b[1;34mUpdateScreenEvent');
       emit(AppState.update(
-        counter: state.counter,
         buttomPressed: false,
         buttonHelpPressed: false,
-        wrong: state.wrong,
-        good: state.good,
         target: state.target,
         page: state.page,
         truePosition: state.truePosition,
       ));
     });
-    updateData() {
-      emit(AppState.update(
-        counter: state.counter,
-        buttomPressed: false,
-        buttonHelpPressed: false,
-        wrong: state.wrong,
-        good: state.good,
-        target: state.target,
-        page: state.page,
-        truePosition: state.truePosition,
-      ));
-      developer.log('Test function');
-    }
   }
 }
